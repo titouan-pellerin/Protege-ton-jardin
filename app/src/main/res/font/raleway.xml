@@ -2,4 +2,5 @@
 <font-family xmlns:android="http://schemas.android.com/apk/res/android">
     <font
         android:font="@font/raleway_light" />
+    <font android:font="@font/raleway_semibold"/>
 </font-family>

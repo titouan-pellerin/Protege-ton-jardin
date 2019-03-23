@@ -2,7 +2,7 @@
     android:shape="rectangle">
 
     <corners
-        android:radius="18dp" />
+        android:radius="10dp" />
 
     <!--<gradient
         android:angle="45"
@@ -15,11 +15,11 @@
 
     <!--If your shape requires only one solid color-->
     <solid
-        android:color="#E9E9E9" />-->
+        android:color="#D6D6D6" />-->
 
     <size
-        android:width="400dp"
-        android:height="80dp" />
+        android:width="60dp"
+        android:height="30dp" />
     <!--Use android:dashWidth="2dp" and android:dashGap="2dp"
     to add dashes to your stroke-->
 
