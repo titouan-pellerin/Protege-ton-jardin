@@ -18,6 +18,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.Switch;
 import android.widget.Toast;
 
 import com.leinardi.android.speeddial.SpeedDialActionItem;
@@ -41,6 +42,7 @@ public class MainActivity extends AppCompatActivity {
     EditText degreeEdit;
     String plantName;
     String degree;
+    Switch aSwitch;
 
     private Button addImage;
     Bitmap selectedImage;
@@ -102,11 +104,28 @@ public class MainActivity extends AppCompatActivity {
                             public void onClick(View v) {
                                 plantEdit = (EditText) addPlantDialog.findViewById(R.id.plant_name);
                                 degreeEdit = (EditText) addPlantDialog.findViewById(R.id.degree_nbr);
-                                plantName = plantEdit.getText().toString();
-                                degree = degreeEdit.getText().toString();
+                                aSwitch = (Switch) addPlantDialog.findViewById(R.id.moveable_plant);
+                                Boolean switchState = aSwitch.isChecked();
+                                plantName = plantEdit.getText().toString().trim();
+                                degree = degreeEdit.getText().toString().trim();
+                                if(plantName.isEmpty() && degree.isEmpty()) {
+                                    Toast.makeText(getApplicationContext(), "Les champs ne sont pas remplis", Toast.LENGTH_LONG).show();
+                                }else if (degree.isEmpty()) {
+                                    Toast.makeText(getApplicationContext(), "Indiquer un degré de gel", Toast.LENGTH_LONG).show();
+                                }else if (plantName.isEmpty()) {
+                                    Toast.makeText(getApplicationContext(), "Indiquer un nom de plante", Toast.LENGTH_LONG).show();
+                                }else if(selectedImage==null){
+                                    Toast.makeText(getApplicationContext(), "Vous n'avez pas ajouté de photo", Toast.LENGTH_LONG).show();
+                                }else{
+                                    if(switchState) {
+                                        addPlant(getApplicationContext(), plantName, degree,true);
+                                        addPlantDialog.dismiss();
+                                    }else{
+                                        addPlant(getApplicationContext(), plantName, degree,false);
+                                        addPlantDialog.dismiss();
+                                    }
+                                }
 
-                                addPlant(getApplicationContext(), plantName, degree);
-                                addPlantDialog.dismiss();
                             }
                         });
 
@@ -129,11 +148,11 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    public void addPlant(Context context, String name, String degree) {
+    public void addPlant(Context context, String name, String degree, boolean isMoveable) {
 
         if(selectedImage!=null) {
             saveToInternalStorage(selectedImage, name);
-
+            selectedImage = null;
             Plant plant = new Plant(context, name, degree);
 
             LinearLayout contentMain = (LinearLayout) findViewById(R.id.mainLinearLayout);
@@ -163,6 +182,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+
         if (!(files == null)) {
             for (int i = 0; i < files.length; i++) {
                 String fileName = files[i].getName();
@@ -173,34 +193,19 @@ public class MainActivity extends AppCompatActivity {
                 String plantName = contentSplit[0];
                 String degree = contentSplit[1];
 
-                File[] imgs = directory.listFiles(new FileFilter() {
-                    @Override
-                    public boolean accept(File file) {
-                        return (file.getPath().endsWith(".jpg"));
-                    }
-                });
-                if (!(files == null)) {
-                    for (int j = 0; j < files.length; j++) {
-                        String imgName = imgs[j].getName();
+                Plant plant = new Plant(getApplicationContext(),plantName , degree);
+                LinearLayout contentMain = (LinearLayout) findViewById(R.id.mainLinearLayout);
+                PlantView plantView = new PlantView(getApplicationContext(), null);
 
-                        Bitmap bitmap = getBitmap(path + "/" + imgName);
-                        Log.d("Files", "FileName:" + imgs[j].getName());
-                        Plant plant = new Plant(getApplicationContext(),plantName , degree);
-                        LinearLayout contentMain = (LinearLayout) findViewById(R.id.mainLinearLayout);
-                        PlantView plantView = new PlantView(getApplicationContext(), null);
+                plantView.setName(plantName);
+                plantView.setDegree(degree);
+                plantView.setInfo("Info info info info");
 
-                        plantView.setName(plantName);
-                        plantView.setDegree(degree);
-                        plantView.setInfo("Info info info info");
+                loadImageFromStorage(path, plantView, plantName);
+                contentMain.addView(plantView);
+                addPlant(getApplicationContext(), plantName, degree, false);
+                Log.d("Files", "FileName:" + files[i].getName());
 
-                        loadImageFromStorage(path, plantView, plantName);
-                        contentMain.addView(plantView);
-                        addPlant(getApplicationContext(), plantName, degree);
-
-                        Log.d("Files", "FileName:" + files[j].getName());
-                    }
-
-                }
             }
         }
     }
@@ -226,9 +231,9 @@ public class MainActivity extends AppCompatActivity {
                 ret = stringBuilder.toString();
             }
         } catch (FileNotFoundException e) {
-            Log.e("login activity", "File not found: " + e.toString());
+            Log.e("F", "File not found: " + e.toString());
         } catch (IOException e) {
-            Log.e("login activity", "Can not read file: " + e.toString());
+            Log.e("F", "Can not read file: " + e.toString());
         }
 
         return ret;
@@ -268,7 +273,9 @@ public class MainActivity extends AppCompatActivity {
         try {
             fos = new FileOutputStream(mypath);
             // Use the compress method on the BitMap object to write image to the OutputStream
-            bitmapImage.compress(Bitmap.CompressFormat.JPEG, 50, fos);
+            bitmapImage = getResizedBitmap(bitmapImage,100);
+            bitmapImage.compress(Bitmap.CompressFormat.JPEG, 100, fos);
+
 
             Toast.makeText(getApplicationContext(), "Fichier enregistré" + plantName, Toast.LENGTH_SHORT).show();
 
@@ -290,7 +297,6 @@ public class MainActivity extends AppCompatActivity {
         try {
             File f = new File(path, plantName + ".jpg");
             Bitmap b = BitmapFactory.decodeStream(new FileInputStream(f));
-            b = getResizedBitmap(b,55,55);
             plantView.setImage(b);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
@@ -312,9 +318,13 @@ public class MainActivity extends AppCompatActivity {
         }
     return bitmap;
     }
-    public Bitmap getResizedBitmap(Bitmap image, int bitmapWidth,
-                                   int bitmapHeight) {
-        return Bitmap.createScaledBitmap(image, bitmapWidth, bitmapHeight,
-                true);
+
+    public Bitmap getResizedBitmap(Bitmap bitmap, int width) {
+        float aspectRatio = bitmap.getWidth() /
+                (float) bitmap.getHeight();
+        int height = Math.round(width / aspectRatio);
+
+
+    return Bitmap.createScaledBitmap(bitmap,width, height, false);
     }
 }
