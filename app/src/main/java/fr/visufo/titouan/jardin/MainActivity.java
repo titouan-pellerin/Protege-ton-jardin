@@ -41,8 +41,10 @@ public class MainActivity extends AppCompatActivity {
     EditText degreeEdit;
     String plantName;
     String degree;
+
     private Button addImage;
     Bitmap selectedImage;
+
     static final int RESULT_LOAD_IMG = 1;
 
     @Override
@@ -62,6 +64,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void addFab() {
         mSpeedDialView = findViewById(R.id.speedDial);
+        //Ajouter le bouton ajouter une plante
         mSpeedDialView.addActionItem(new SpeedDialActionItem.Builder(R.id.fab_add_plant, R.drawable.ic_plants)
                 .setFabBackgroundColor(ResourcesCompat.getColor(getResources(), R.color.colorAccent, getTheme()))
                 //  .setFabImageTintColor(ResourcesCompat.getColor(getResources(), R.color.white, getTheme()))
@@ -82,6 +85,7 @@ public class MainActivity extends AppCompatActivity {
                         addPlantDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
                         addPlantDialog.show();
                         Button btn = (Button) addPlantDialog.findViewById(R.id.done_button_addPlant);
+
                         addImage = (Button) addPlantDialog.findViewById(R.id.addImage);
                         addImage.setOnClickListener(new View.OnClickListener() {
                             @Override
@@ -100,6 +104,7 @@ public class MainActivity extends AppCompatActivity {
                                 degreeEdit = (EditText) addPlantDialog.findViewById(R.id.degree_nbr);
                                 plantName = plantEdit.getText().toString();
                                 degree = degreeEdit.getText().toString();
+
                                 addPlant(getApplicationContext(), plantName, degree);
                                 addPlantDialog.dismiss();
                             }
@@ -112,6 +117,7 @@ public class MainActivity extends AppCompatActivity {
                         SettingsDialogClass settingDialog = new SettingsDialogClass(MainActivity.this);
                         settingDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
                         settingDialog.show();
+
                         mSpeedDialView.close(); // To close the Speed Dial with animation
 
                         return true; // false will close it without animation
@@ -127,14 +133,20 @@ public class MainActivity extends AppCompatActivity {
 
         if(selectedImage!=null) {
             saveToInternalStorage(selectedImage, name);
+
             Plant plant = new Plant(context, name, degree);
+
             LinearLayout contentMain = (LinearLayout) findViewById(R.id.mainLinearLayout);
+
+
             PlantView plantView = new PlantView(context, null);
             plantView.setName(name);
             plantView.setDegree(degree);
             plantView.setInfo("Info info info info");
 
             loadImageFromStorage(getApplicationContext().getFilesDir().toString(), plantView, name);
+
+
             contentMain.addView(plantView);
 
         }
@@ -256,7 +268,7 @@ public class MainActivity extends AppCompatActivity {
         try {
             fos = new FileOutputStream(mypath);
             // Use the compress method on the BitMap object to write image to the OutputStream
-            bitmapImage.compress(Bitmap.CompressFormat.JPEG, 100, fos);
+            bitmapImage.compress(Bitmap.CompressFormat.JPEG, 50, fos);
 
             Toast.makeText(getApplicationContext(), "Fichier enregistré" + plantName, Toast.LENGTH_SHORT).show();
 

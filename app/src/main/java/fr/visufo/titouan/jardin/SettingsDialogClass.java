@@ -7,8 +7,7 @@ import android.view.View;
 import android.view.Window;
 import android.widget.Button;
 
-public class SettingsDialogClass extends Dialog implements
-        View.OnClickListener {
+public class SettingsDialogClass extends Dialog{
 
     public Activity c;
     public Dialog d;
@@ -24,13 +23,13 @@ public class SettingsDialogClass extends Dialog implements
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.settings_dialog);
-        done = (Button) findViewById(R.id.done_button_settings);
+        /*done = (Button) findViewById(R.id.done_button_settings);
         done.setOnClickListener(this);
-
+*/
 
     }
 
-    @Override
+    /*@Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.done_button_settings:
@@ -40,5 +39,5 @@ public class SettingsDialogClass extends Dialog implements
                 break;
         }
         dismiss();
-    }
+    }*/
 }

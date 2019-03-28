@@ -114,16 +114,18 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="5dp"
                 android:gravity="center">
+
                 <Button
                     android:id="@+id/done_button_addPlant"
                     android:layout_width="40dp"
                     android:layout_height="40dp"
-                    android:layout_marginHorizontal="10dp"
                     android:layout_gravity="center"
-                    android:onClick="onClick"
-                    android:background="@drawable/ic_done_ripple"/>
+                    android:layout_marginTop="-5dp"
+                    android:layout_marginHorizontal="10dp"
+                    android:background="@drawable/ic_done_ripple"
+                    android:onClick="onClick" />
             </LinearLayout>
 
         </LinearLayout>
