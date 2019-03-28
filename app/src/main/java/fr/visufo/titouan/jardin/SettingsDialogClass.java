@@ -7,16 +7,15 @@ import android.view.View;
 import android.view.Window;
 import android.widget.Button;
 
-public class CustomDialogClass extends Dialog implements
-        android.view.View.OnClickListener {
+public class SettingsDialogClass extends Dialog implements
+        View.OnClickListener {
 
     public Activity c;
     public Dialog d;
-    public Button yes, no;
+    public Button done;
 
-    public CustomDialogClass(Activity a) {
+    public SettingsDialogClass(Activity a) {
         super(a);
-        // TODO Auto-generated constructor stub
         this.c = a;
     }
 
@@ -24,23 +23,22 @@ public class CustomDialogClass extends Dialog implements
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
-        setContentView(R.layout.addplante_dialog);
+        setContentView(R.layout.settings_dialog);
+        done = (Button) findViewById(R.id.done_button_settings);
+        done.setOnClickListener(this);
 
 
     }
 
     @Override
     public void onClick(View v) {
-        /*switch (v.getId()) {
-            case R.id.btn_yes:
-                c.finish();
-                break;
-            case R.id.btn_no:
+        switch (v.getId()) {
+            case R.id.done_button_settings:
                 dismiss();
                 break;
             default:
                 break;
         }
-        dismiss();*/
+        dismiss();
     }
 }

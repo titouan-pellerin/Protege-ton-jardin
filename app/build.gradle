@@ -30,4 +30,5 @@ dependencies {
 }
 
 dependencies {
-    implementation 'com.leinardi.android:speed-dial:2.0.1'}
+    implementation 'com.leinardi.android:speed-dial:2.0.1'
+    implementation 'de.hdodenhof:circleimageview:2.1.0'}

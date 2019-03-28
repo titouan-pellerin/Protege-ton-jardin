@@ -4,4 +4,11 @@
         <attr name="underlineWidth" format="dimension" />
         <attr name="underlineColor" format="color" />
     </declare-styleable>
+    <declare-styleable name="PlantView">
+        <attr name="name" format="string"/>
+        <attr name="info" format="string"/>
+        <attr name="degree" format="string"/>
+        <attr name="android:src"/>
+
+    </declare-styleable>
 </resources>

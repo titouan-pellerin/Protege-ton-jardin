@@ -1,52 +1,119 @@
 package fr.visufo.titouan.jardin;
 
+import android.content.Context;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.content.res.AppCompatResources;
-import android.support.v7.widget.Toolbar;
+
 import android.util.Log;
 import android.view.View;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.leinardi.android.speeddial.SpeedDialActionItem;
 import com.leinardi.android.speeddial.SpeedDialView;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileFilter;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+
+
 public class MainActivity extends AppCompatActivity {
 
     SpeedDialView mSpeedDialView;
+    EditText plantEdit;
+    EditText degreeEdit;
+    String plantName;
+    String degree;
+    private Button addImage;
+    Bitmap selectedImage;
+    static final int RESULT_LOAD_IMG = 1;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-      /* FloatingActionButton fab = findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });*/
-       addFab();
+
+        addFab();
+        loadPlants();
+
+
+
+    }
+
+
+
+    public void addFab() {
+        mSpeedDialView = findViewById(R.id.speedDial);
+        mSpeedDialView.addActionItem(new SpeedDialActionItem.Builder(R.id.fab_add_plant, R.drawable.ic_plants)
+                .setFabBackgroundColor(ResourcesCompat.getColor(getResources(), R.color.colorAccent, getTheme()))
+                //  .setFabImageTintColor(ResourcesCompat.getColor(getResources(), R.color.white, getTheme()))
+                .setLabel("Ajouter une plante")
+                .create());
+
+        mSpeedDialView.addActionItem(new SpeedDialActionItem.Builder(R.id.fab_settings, R.drawable.ic_settings)
+                .setFabBackgroundColor(ResourcesCompat.getColor(getResources(), R.color.colorAccent, getTheme()))
+                .setLabel("Paramètres")
+                .create());
+
         mSpeedDialView.setOnActionSelectedListener(new SpeedDialView.OnActionSelectedListener() {
             @Override
             public boolean onActionSelected(SpeedDialActionItem actionItem) {
                 switch (actionItem.getId()) {
                     case R.id.fab_add_plant:
-                        CustomDialogClass cdd = new CustomDialogClass(MainActivity.this);
-                        cdd.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-                        cdd.show();
+                        final AddPlantDialogClass addPlantDialog = new AddPlantDialogClass(MainActivity.this);
+                        addPlantDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                        addPlantDialog.show();
+                        Button btn = (Button) addPlantDialog.findViewById(R.id.done_button_addPlant);
+                        addImage = (Button) addPlantDialog.findViewById(R.id.addImage);
+                        addImage.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);
+                                photoPickerIntent.setType("image/*");
+                                startActivityForResult(photoPickerIntent, RESULT_LOAD_IMG);
+
+                            }
+                        });
+                        btn.setOnClickListener(new View.OnClickListener() {
+
+                            @Override
+                            public void onClick(View v) {
+                                plantEdit = (EditText) addPlantDialog.findViewById(R.id.plant_name);
+                                degreeEdit = (EditText) addPlantDialog.findViewById(R.id.degree_nbr);
+                                plantName = plantEdit.getText().toString();
+                                degree = degreeEdit.getText().toString();
+                                addPlant(getApplicationContext(), plantName, degree);
+                                addPlantDialog.dismiss();
+                            }
+                        });
+
+
                         mSpeedDialView.close(); // To close the Speed Dial with animation
                         return true; // false will close it without animation
                     case R.id.fab_settings:
+                        SettingsDialogClass settingDialog = new SettingsDialogClass(MainActivity.this);
+                        settingDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                        settingDialog.show();
                         mSpeedDialView.close(); // To close the Speed Dial with animation
+
                         return true; // false will close it without animation
                     default:
                         break;
@@ -56,21 +123,186 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    public void addPlant(Context context, String name, String degree) {
+
+        if(selectedImage!=null) {
+            saveToInternalStorage(selectedImage, name);
+            Plant plant = new Plant(context, name, degree);
+            LinearLayout contentMain = (LinearLayout) findViewById(R.id.mainLinearLayout);
+            PlantView plantView = new PlantView(context, null);
+            plantView.setName(name);
+            plantView.setDegree(degree);
+            plantView.setInfo("Info info info info");
+
+            loadImageFromStorage(getApplicationContext().getFilesDir().toString(), plantView, name);
+            contentMain.addView(plantView);
+
+        }
+
+    }
+
+    public void loadPlants() {
+        String path = getApplicationContext().getFilesDir().toString();
+        File directory = new File(path);
+        File[] files = directory.listFiles(new FileFilter() {
+            @Override
+            public boolean accept(File file) {
+                return (file.getPath().endsWith(".txt"));
+            }
+        });
+
+        if (!(files == null)) {
+            for (int i = 0; i < files.length; i++) {
+                String fileName = files[i].getName();
+                String content = readFromFile(getApplicationContext(), fileName);
+                String[] contentSplit;
+                contentSplit = content.split(";");
+
+                String plantName = contentSplit[0];
+                String degree = contentSplit[1];
+
+                File[] imgs = directory.listFiles(new FileFilter() {
+                    @Override
+                    public boolean accept(File file) {
+                        return (file.getPath().endsWith(".jpg"));
+                    }
+                });
+                if (!(files == null)) {
+                    for (int j = 0; j < files.length; j++) {
+                        String imgName = imgs[j].getName();
+
+                        Bitmap bitmap = getBitmap(path + "/" + imgName);
+                        Log.d("Files", "FileName:" + imgs[j].getName());
+                        Plant plant = new Plant(getApplicationContext(),plantName , degree);
+                        LinearLayout contentMain = (LinearLayout) findViewById(R.id.mainLinearLayout);
+                        PlantView plantView = new PlantView(getApplicationContext(), null);
+
+                        plantView.setName(plantName);
+                        plantView.setDegree(degree);
+                        plantView.setInfo("Info info info info");
+
+                        loadImageFromStorage(path, plantView, plantName);
+                        contentMain.addView(plantView);
+                        addPlant(getApplicationContext(), plantName, degree);
+
+                        Log.d("Files", "FileName:" + files[j].getName());
+                    }
+
+                }
+            }
+        }
+    }
+
+    private String readFromFile(Context context, String fileName) {
+
+        String ret = "";
+
+        try {
+            InputStream inputStream = context.openFileInput(fileName);
+
+            if (inputStream != null) {
+                InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
+                BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+                String receiveString = "";
+                StringBuilder stringBuilder = new StringBuilder();
+
+                while ((receiveString = bufferedReader.readLine()) != null) {
+                    stringBuilder.append(receiveString);
+                }
+
+                inputStream.close();
+                ret = stringBuilder.toString();
+            }
+        } catch (FileNotFoundException e) {
+            Log.e("login activity", "File not found: " + e.toString());
+        } catch (IOException e) {
+            Log.e("login activity", "Can not read file: " + e.toString());
+        }
+
+        return ret;
+    }
+
+    @Override
+    protected void onActivityResult(int reqCode, int resultCode, Intent data) {
+        super.onActivityResult(reqCode, resultCode, data);
 
 
+        if (resultCode == RESULT_OK) {
+            try {
+                final Uri imageUri = data.getData();
+                final InputStream imageStream = getContentResolver().openInputStream(imageUri);
+                selectedImage = BitmapFactory.decodeStream(imageStream);
 
-    public void addFab(){
-        mSpeedDialView = findViewById(R.id.speedDial);
-        mSpeedDialView.addActionItem(new SpeedDialActionItem.Builder(R.id.fab_add_plant, R.drawable.ic_plants)
-                .setFabBackgroundColor(ResourcesCompat.getColor(getResources(),R.color.colorAccent, getTheme()))
-              //  .setFabImageTintColor(ResourcesCompat.getColor(getResources(), R.color.white, getTheme()))
-                .setLabel("Ajouter une plante")
-                .create());
+                Drawable plantImg = new BitmapDrawable(getResources(), selectedImage);
+                addImage.setBackgroundDrawable(plantImg);
 
-        mSpeedDialView.addActionItem(new SpeedDialActionItem.Builder(R.id.fab_settings, R.drawable.ic_settings)
-                .setFabBackgroundColor(ResourcesCompat.getColor(getResources(), R.color.colorAccent, getTheme()))
-                .setLabel("Paramètres")
-                .create());
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+                Toast.makeText(getApplicationContext(), "Une erreur s'est produite", Toast.LENGTH_LONG).show();
 
+            }
+
+        } else {
+            Toast.makeText(getApplicationContext(), "Vous n'avez pas choisi d'image", Toast.LENGTH_LONG).show();
+
+        }
+    }
+
+    private String saveToInternalStorage(Bitmap bitmapImage, String plantName) {
+        File directory = getApplicationContext().getFilesDir();
+        // Create imageDir
+        File mypath = new File(directory, plantName + ".jpg");
+        FileOutputStream fos = null;
+        try {
+            fos = new FileOutputStream(mypath);
+            // Use the compress method on the BitMap object to write image to the OutputStream
+            bitmapImage.compress(Bitmap.CompressFormat.JPEG, 100, fos);
+
+            Toast.makeText(getApplicationContext(), "Fichier enregistré" + plantName, Toast.LENGTH_SHORT).show();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                fos.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return directory.getAbsolutePath();
+    }
+
+    private void loadImageFromStorage(String path, PlantView plantView, String plantName) {
+
+        try {
+            File f = new File(path, plantName + ".jpg");
+            Bitmap b = BitmapFactory.decodeStream(new FileInputStream(f));
+            b = getResizedBitmap(b,55,55);
+            plantView.setImage(b);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    public Bitmap getBitmap(String path) {
+        Bitmap bitmap = null;
+
+        try {
+            File f = new File(path);
+            BitmapFactory.Options options = new BitmapFactory.Options();
+            options.inPreferredConfig = Bitmap.Config.ARGB_8888;
+
+            bitmap = BitmapFactory.decodeStream(new FileInputStream(f), null, options);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    return bitmap;
+    }
+    public Bitmap getResizedBitmap(Bitmap image, int bitmapWidth,
+                                   int bitmapHeight) {
+        return Bitmap.createScaledBitmap(image, bitmapWidth, bitmapHeight,
+                true);
     }
 }
