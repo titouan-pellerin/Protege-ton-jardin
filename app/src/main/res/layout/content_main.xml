@@ -25,7 +25,7 @@
             <ImageView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:src="@drawable/header"
+                android:src="@drawable/heeader3"
                 android:scaleType="fitCenter"
                 android:layout_marginTop="0dp"
                 android:layout_marginHorizontal="10dp"

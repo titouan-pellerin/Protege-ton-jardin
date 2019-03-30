@@ -17,14 +17,22 @@ public class Plant {
 
     private String TAG_WRITE_READ_FILE = "TAG_WRITE_READ_FILE";
     public final String[] plantAttributs;
+    String plantName;
+    String degree;
+
+    boolean isMoveable;
 
 
 
-    public Plant(Context context, String plantName, String plantDegree) {
-        writeToFile(plantName+";"+plantDegree, plantName, context);
+    public Plant(Context context, String plantName, String plantDegree, boolean isMoveable) {
 
+        String isMoveableStr = Boolean.toString(isMoveable);
+        writeToFile(plantName+";"+plantDegree+";"+isMoveableStr, plantName, context);
         String string = readFromFile(context, plantName);
         plantAttributs = string.split(";");
+        this.plantName = plantAttributs[0];
+        degree = plantAttributs[1];
+        this.isMoveable = Boolean.parseBoolean(plantAttributs[2]);
 
     }
 
@@ -70,4 +78,13 @@ public class Plant {
         return ret;
     }
 
+    public String getName(){
+        return plantName;
+    }
+    public String getDegree(){
+        return degree;
+    }
+    public boolean isMoveable(){
+        return isMoveable;
+    }
 }

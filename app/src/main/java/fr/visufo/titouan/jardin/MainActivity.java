@@ -153,7 +153,7 @@ public class MainActivity extends AppCompatActivity {
         if(selectedImage!=null) {
             saveToInternalStorage(selectedImage, name);
             selectedImage = null;
-            Plant plant = new Plant(context, name, degree);
+            Plant plant = new Plant(context, name, degree, isMoveable);
 
             LinearLayout contentMain = (LinearLayout) findViewById(R.id.mainLinearLayout);
 
@@ -187,13 +187,14 @@ public class MainActivity extends AppCompatActivity {
             for (int i = 0; i < files.length; i++) {
                 String fileName = files[i].getName();
                 String content = readFromFile(getApplicationContext(), fileName);
-                String[] contentSplit;
-                contentSplit = content.split(";");
+                String[] plantAttributs;
+                plantAttributs = content.split(";");
 
-                String plantName = contentSplit[0];
-                String degree = contentSplit[1];
+                String plantName = plantAttributs[0];
+                String degree = plantAttributs[1];
+                boolean isMoveable = Boolean.valueOf(plantAttributs[2]);
 
-                Plant plant = new Plant(getApplicationContext(),plantName , degree);
+                Plant plant = new Plant(getApplicationContext(),plantName , degree,isMoveable);
                 LinearLayout contentMain = (LinearLayout) findViewById(R.id.mainLinearLayout);
                 PlantView plantView = new PlantView(getApplicationContext(), null);
 
@@ -201,10 +202,11 @@ public class MainActivity extends AppCompatActivity {
                 plantView.setDegree(degree);
                 plantView.setInfo("Info info info info");
 
+                Log.v("Plantes:", plant.getName() +": "+ plant.getDegree()+ "°C " + "Déplaçable : "+plant.isMoveable());
+
                 loadImageFromStorage(path, plantView, plantName);
                 contentMain.addView(plantView);
                 addPlant(getApplicationContext(), plantName, degree, false);
-                Log.d("Files", "FileName:" + files[i].getName());
 
             }
         }
