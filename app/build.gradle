@@ -14,8 +14,10 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+
         }
     }
+
 }
 
 dependencies {
@@ -31,4 +33,5 @@ dependencies {
 
 dependencies {
     implementation 'com.leinardi.android:speed-dial:2.0.1'
-    implementation 'de.hdodenhof:circleimageview:2.1.0'}
+    implementation 'de.hdodenhof:circleimageview:2.1.0'
+    implementation 'com.visuality.f32forandroid:f32:2.4'}

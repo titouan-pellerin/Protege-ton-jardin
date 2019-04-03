@@ -2,8 +2,6 @@ package fr.visufo.titouan.jardin;
 
 import android.content.Context;
 import android.content.res.TypedArray;
-
-
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
@@ -14,6 +12,9 @@ import android.widget.TextView;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
+/**
+ * Classe permettant de créer des vues customisées de type "PlantView"
+ */
 
 public class PlantView extends FrameLayout {
 
@@ -29,9 +30,12 @@ public class PlantView extends FrameLayout {
     private String degreeText;
     private Drawable plantImage;
 
+    /****************
+     * CONSTRUCTEURS
+     ***************/
 
     /**
-     * Constructor.
+     * Constructeur de la classe.
      *
      * @param context the context.
      */
@@ -42,7 +46,7 @@ public class PlantView extends FrameLayout {
     }
 
     /**
-     * Constructor.
+     * Constructeur.
      *
      * @param context the context.
      * @param attrs   the attributes from the layout.
@@ -54,7 +58,7 @@ public class PlantView extends FrameLayout {
     }
 
     /**
-     * Constructor.
+     * Constructeur.
      *
      * @param context      the context.
      * @param attrs        the attributes from the layout.
@@ -66,6 +70,12 @@ public class PlantView extends FrameLayout {
         init();
     }
 
+
+    /**********
+    * FONCTIONS
+    ***********/
+
+    //Fonction utile pour récupérer les attributs si l'on ajoute une "PlantView" directement en XML
     private void obtainStyledAttributes(Context context, AttributeSet attrs, int defStyleAttr) {
         if (attrs != null) {
             TypedArray typedArray = context.getTheme().obtainStyledAttributes(attrs, R.styleable.PlantView, defStyleAttr, 0);
@@ -76,7 +86,7 @@ public class PlantView extends FrameLayout {
 
         }
     }
-
+    //Fonction permettant d'initialiser la vue
     private void init() {
         inflate(getContext(), R.layout.plantview, this);
         nameView = findViewById(R.id.nomPlante);
@@ -85,7 +95,7 @@ public class PlantView extends FrameLayout {
         imageView = findViewById(R.id.image);
         setupView();
     }
-
+    //Fonction permettant d'"installer" la vue
     private void setupView() {
 
         nameView.setText(nameText);
@@ -94,6 +104,10 @@ public class PlantView extends FrameLayout {
         imageView.setImageDrawable(plantImage);
     }
 
+    /**
+     * Fonctions permettant de changer les attributs
+     * de la vue par programmation
+     */
     public void setName(String name) {
         nameView.setText(name);
     }

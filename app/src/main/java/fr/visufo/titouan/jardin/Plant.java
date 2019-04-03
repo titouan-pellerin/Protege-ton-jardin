@@ -2,8 +2,6 @@ package fr.visufo.titouan.jardin;
 
 import android.content.Context;
 import android.util.Log;
-
-
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -12,27 +10,37 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 
+/**
+ * Classe permettant de créer un nouveau type d'objet, "Plant"
+ */
+
 
 public class Plant {
 
     private String TAG_WRITE_READ_FILE = "TAG_WRITE_READ_FILE";
+
+
     public final String[] plantAttributs;
+
+    //Variables
     String plantName;
     String degree;
-
-    boolean isMoveable;
-
+    boolean isMovable;
 
 
-    public Plant(Context context, String plantName, String plantDegree, boolean isMoveable) {
+    //Constructeur de la classe
+    public Plant(Context context, String plantName, String plantDegree, boolean isMovable) {
 
-        String isMoveableStr = Boolean.toString(isMoveable);
-        writeToFile(plantName+";"+plantDegree+";"+isMoveableStr, plantName, context);
+        String isMovableSir = Boolean.toString(isMovable);
+        //Création d'un nouveau fichier .txt avec écrit à l'intérieur "nomPlante;degré;déplaçable ou non"
+        writeToFile(plantName+";"+plantDegree+";"+isMovableSir, plantName, context);
+
+
         String string = readFromFile(context, plantName);
         plantAttributs = string.split(";");
         this.plantName = plantAttributs[0];
         degree = plantAttributs[1];
-        this.isMoveable = Boolean.parseBoolean(plantAttributs[2]);
+        this.isMovable = Boolean.parseBoolean(plantAttributs[2]);
 
     }
 
@@ -84,7 +92,7 @@ public class Plant {
     public String getDegree(){
         return degree;
     }
-    public boolean isMoveable(){
-        return isMoveable;
+    public boolean isMovable(){
+        return isMovable;
     }
 }
