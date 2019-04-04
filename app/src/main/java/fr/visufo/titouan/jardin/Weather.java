@@ -33,6 +33,7 @@ public class Weather {
 
                         long tomorrow = rightNow + TimeUnit.DAYS.toSeconds(1);
                         com.visuality.f32.weather.data.entity.Weather weatherInTwoDays = forecast.getWeatherForTimestamp(tomorrow);
+                        //t
                         Temperature temp = weatherInTwoDays.getTemperature().getMinimum();
                         double tempC = temp.getValue(TemperatureUnit.CELCIUS);
 
