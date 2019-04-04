@@ -1,13 +1,24 @@
 package fr.visufo.titouan.jardin;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.transition.ChangeBounds;
+import android.transition.TransitionManager;
+import android.transition.TransitionSet;
 import android.util.AttributeSet;
+import android.view.View;
+import android.view.ViewGroup;
+import android.view.animation.AnimationUtils;
+import android.view.animation.BounceInterpolator;
+import android.view.animation.ScaleAnimation;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -23,12 +34,15 @@ public class PlantView extends FrameLayout {
     private TextView infoView;
     private TextView degreeView;
     private CircleImageView imageView;
+    private LinearLayout planteBg;
 
     //Attributes
     private String nameText;
     private String infoText;
     private String degreeText;
     private Drawable plantImage;
+
+    private boolean isExtended = false;
 
     /****************
      * CONSTRUCTEURS
@@ -93,6 +107,7 @@ public class PlantView extends FrameLayout {
         infoView = findViewById(R.id.info);
         degreeView = findViewById(R.id.degree);
         imageView = findViewById(R.id.image);
+        planteBg = findViewById(R.id.plante);
         setupView();
     }
     //Fonction permettant d'"installer" la vue
@@ -102,6 +117,34 @@ public class PlantView extends FrameLayout {
         infoView.setText(infoText);
         degreeView.setText(degreeText +" °C");
         imageView.setImageDrawable(plantImage);
+        planteBg.setOnClickListener(new OnClickListener() {
+            @SuppressLint("NewApi")
+            @Override
+            public void onClick(View v) {
+
+                if(isExtended){
+                    TransitionManager.beginDelayedTransition(planteBg, new TransitionSet()
+                            .addTransition(new ChangeBounds()));
+
+
+                    ViewGroup.LayoutParams params = planteBg.getLayoutParams();
+                    params.height = LayoutParams.WRAP_CONTENT;
+
+                    planteBg.setLayoutParams(params);
+                    isExtended = false;
+
+                }else if(isExtended == false) {
+
+                    TransitionManager.beginDelayedTransition(planteBg, new TransitionSet()
+                            .addTransition(new ChangeBounds()));
+
+                    ViewGroup.LayoutParams params = planteBg.getLayoutParams();
+                    params.height = 500;
+                    planteBg.setLayoutParams(params);
+                    isExtended = true;
+                }
+            }
+        });
     }
 
     /**
@@ -120,4 +163,6 @@ public class PlantView extends FrameLayout {
     public void setImage(Bitmap image){
         imageView.setImageBitmap(image);
     }
+
+
 }

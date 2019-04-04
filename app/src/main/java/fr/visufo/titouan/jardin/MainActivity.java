@@ -9,7 +9,6 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -28,7 +27,6 @@ import com.leinardi.android.speeddial.SpeedDialView;
 import com.visuality.f32.temperature.Temperature;
 import com.visuality.f32.temperature.TemperatureUnit;
 import com.visuality.f32.weather.data.entity.Forecast;
-import com.visuality.f32.weather.data.entity.Weather;
 import com.visuality.f32.weather.manager.WeatherManager;
 
 import java.io.BufferedReader;
@@ -68,7 +66,6 @@ public class MainActivity extends AppCompatActivity {
     String cityName;
 
     static final int RESULT_LOAD_IMG = 1;
-    private String OPEN_WEATHER_MAP_API = "f296d96e2cc0b7b08741e0b238731746";
 
     //Actions au lancement de l'application
     @Override
@@ -98,41 +95,7 @@ public class MainActivity extends AppCompatActivity {
  * *******************/
 
 
-    public void setWeatherCity(final String cityName){
-        new WeatherManager(OPEN_WEATHER_MAP_API).getFiveDayForecastByCityName(
-                cityName, // city name
-                new WeatherManager.ForecastHandler() {
-                    @Override
-                    public void onReceivedForecast(WeatherManager manager, Forecast forecast) {
-                        // Handle forecast
 
-                        int numberOfAvailableTimestamps = forecast.getNumberOfTimestamps();
-
-
-                        long rightNow = System.currentTimeMillis() / 1000;
-
-                        long tomorrow = rightNow + TimeUnit.DAYS.toSeconds(1);
-                        Weather weatherInTwoDays = forecast.getWeatherForTimestamp(tomorrow);
-                        Temperature temp = weatherInTwoDays.getTemperature().getMinimum();
-                        double tempC = temp.getValue(TemperatureUnit.CELCIUS);
-                        Toast.makeText(getApplicationContext(),"Température " + tempC ,Toast.LENGTH_SHORT).show();
-                        /*for (int timestampIndex = 0; timestampIndex < numberOfAvailableTimestamps; timestampIndex++) {
-                            long timestamp = forecast.getTimestampByIndex(timestampIndex);
-                            Weather weatherForTimestamp = forecast.getWeatherForTimestamp(timestamp);
-                            Temperature tempMin = weatherForTimestamp.getTemperature().getMinimum();
-                            double temperatureInCelcius = tempMin.getValue(TemperatureUnit.CELCIUS); // 0.0 degrees
-                        }*/
-                    }
-
-                    @Override
-                    public void onFailedToReceiveForecast(WeatherManager manager) {
-                        Log.v("TAG", "Température à "+cityName + " ERREUR");
-
-                    }
-                }
-        );
-
-    }
 
     //Fonction permettant de créer le bouton flottant
     public void addFab() {
@@ -220,19 +183,16 @@ public class MainActivity extends AppCompatActivity {
 
                                 //Si les variables plantName et degree sont vides, donc si les deux champs ne sont pas remplis, on en informe l'utilisateur
                                 if(plantName.isEmpty() && degree.isEmpty()) {
-                                    Toast.makeText(getApplicationContext(), "Les champs ne sont pas remplis", Toast.LENGTH_LONG).show();
-
+                                    showToast("Les champs ne sont pas remplis");
                                 //Sinon si seulement la variable degree est vide, donc si le 2e champs n'est pas rempli, on en informe l'utilisateur
                                 }else if (degree.isEmpty()) {
-                                    Toast.makeText(getApplicationContext(), "Indiquer un degré de gel", Toast.LENGTH_LONG).show();
-
+                                    showToast("Indiquer un degré de gel");
                                 //Sinon si seulement la variable plantName est vide, donc si le 1er champs n'est pas rempli, on en informe l'utilisateur
                                 }else if (plantName.isEmpty()) {
-                                    Toast.makeText(getApplicationContext(), "Indiquer un nom de plante", Toast.LENGTH_LONG).show();
-
+                                    showToast("Indiquer un nom de plante");
                                 //Sinon si il n'y a pas d'image de sélectionnée, on en informe l'utilisateur
                                 }else if(selectedImage==null){
-                                    Toast.makeText(getApplicationContext(), "Vous n'avez pas ajouté de photo", Toast.LENGTH_LONG).show();
+                                    showToast("Vous n'avez pas ajouté de photo");
 
                                 //Et finalement si toutes les conditions sont remplies, on ajoute les plantes à la vue principale.
                                 }else{
@@ -267,7 +227,7 @@ public class MainActivity extends AppCompatActivity {
                             @Override
                             public void onClick(View v) {
                                 cityName = cityNameEdit.getText().toString().trim();
-                                setWeatherCity(cityName);
+                                Weather.setWeatherCity(cityName, getApplicationContext());
                                 settingDialog.dismiss();
                             }
                         });
@@ -306,7 +266,7 @@ public class MainActivity extends AppCompatActivity {
         plantView.setInfo("Info info info info");
 
         //On récupère l'image au nom de la plante depuis le stockage interne et on l'ajoute à la "PlantView" définie juste au-dessus
-        showImageFromStorage(getApplicationContext().getFilesDir().toString(), plantView, name);
+        showImageFromStorage(plantView, name);
 
         //Et finalement on ajoute la "PlantView" que l'on vient de définir à la vue principale
         contentMain.addView(plantView);
@@ -315,20 +275,7 @@ public class MainActivity extends AppCompatActivity {
     //Fonction utilisée pour charger les plantes au démarrage de l'application
     public void loadPlants() {
 
-        //On récupère le chemin pour accéder aux fichiers de l'application
-        String path = getApplicationContext().getFilesDir().toString();
-
-        //On récupère le dossier de fichiers de l'application dans une variable
-        File directory = new File(path);
-
-        //Création d'un tableau de fichiers de type .txt
-        File[] files = directory.listFiles(new FileFilter() {
-            @Override
-            public boolean accept(File file) {
-                return (file.getPath().endsWith(".txt"));
-            }
-        });
-
+        File[] files = listTxt();
         //Si le tableau n'est pas vide
         if (!(files == null)) {
             //Boucle pour afficher chaque plante sur la vue principale, en fonction du nombre de fichiers, donc du nombre de plantes enregistrées
@@ -366,7 +313,7 @@ public class MainActivity extends AppCompatActivity {
                 Log.v("Plantes:", plantName+": "+ degree +"°C " + "Déplaçable : "+isMovable);
 
                 //On ajoute l'image de la photo en question à la vue
-                showImageFromStorage(path, plantView, plantName);
+                showImageFromStorage(plantView, plantName);
 
                 //On ajoute la "PlantView" à la vue principale
                 contentMain.addView(plantView);
@@ -460,8 +407,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     //Fonction permettant d'afficher une image au nom d'une plante depuis le stockage
-    private void showImageFromStorage(String path, PlantView plantView, String plantName) {
+    private void showImageFromStorage(PlantView plantView, String plantName) {
         try {
+            String path = getApplicationContext().getFilesDir().toString();
+
             //On récupère l'image s'appelant "nomPlante.jpg"
             File f = new File(path, plantName + ".jpg");
             Bitmap b = BitmapFactory.decodeStream(new FileInputStream(f));
@@ -481,4 +430,27 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+
+    public File[] listTxt(){
+
+        File[] files;
+        //On récupère le chemin pour accéder aux fichiers de l'application
+        String path = getApplicationContext().getFilesDir().toString();
+
+        //On récupère le dossier de fichiers de l'application dans une variable
+        File directory = new File(path);
+
+        //Création d'un tableau de fichiers de type .txt
+        files = directory.listFiles(new FileFilter() {
+            @Override
+            public boolean accept(File file) {
+                return (file.getPath().endsWith(".txt"));
+            }
+        });
+        return files;
+    }
+
+    public void showToast(String msg){
+        Toast.makeText(getApplicationContext(),msg,Toast.LENGTH_LONG).show();
+    }
 }
