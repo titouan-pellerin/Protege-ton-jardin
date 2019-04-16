@@ -12,6 +12,7 @@
     <string name="plante9">Plante 9</string>
     <string name="plante10">Plante 10</string>
     <string name="OPEN_WEATHER_MAP_API_KEY">f296d96e2cc0b7b08741e0b238731746</string>
+    <string name="title_activity_maps">Map</string>
 
 
 </resources>

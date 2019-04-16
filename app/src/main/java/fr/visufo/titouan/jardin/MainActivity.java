@@ -1,5 +1,6 @@
 package fr.visufo.titouan.jardin;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -12,7 +13,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.app.AppCompatActivity;
-
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -21,13 +21,10 @@ import android.widget.LinearLayout;
 import android.widget.Switch;
 import android.widget.Toast;
 
-
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GoogleApiAvailability;
 import com.leinardi.android.speeddial.SpeedDialActionItem;
 import com.leinardi.android.speeddial.SpeedDialView;
-import com.visuality.f32.temperature.Temperature;
-import com.visuality.f32.temperature.TemperatureUnit;
-import com.visuality.f32.weather.data.entity.Forecast;
-import com.visuality.f32.weather.manager.WeatherManager;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -38,9 +35,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.util.Calendar;
-import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -66,6 +60,7 @@ public class MainActivity extends AppCompatActivity {
     String cityName;
 
     static final int RESULT_LOAD_IMG = 1;
+    private static final int ERROR_DIALOG_REQUEST = 9001;
 
     //Actions au lancement de l'application
     @Override
@@ -218,19 +213,24 @@ public class MainActivity extends AppCompatActivity {
                     case R.id.fab_settings:
                         //On créé une fenêtre de dialogue de type "Settings"
                         final SettingsDialogClass settingDialog = new SettingsDialogClass(MainActivity.this);
-                        settingDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-                        settingDialog.show();
-                        cityNameEdit = (EditText) settingDialog.findViewById(R.id.cityName);
+                        /*settingDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                        settingDialog.show();*/
+                        if(isServicesOK()) {
+                            Intent intent = new Intent(MainActivity.this, MapsActivity.class);
+                            startActivity(intent);
+
+                        }
+                        /*cityNameEdit = (EditText) settingDialog.findViewById(R.id.cityName);
                         settingsDoneButton = (Button) settingDialog.findViewById(R.id.done_button_settings);
 
                         settingsDoneButton.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
                                 cityName = cityNameEdit.getText().toString().trim();
-                                Weather.setWeatherCity(cityName, getApplicationContext());
+                                WeatherClass.setWeatherCity(cityName, getApplicationContext());
                                 settingDialog.dismiss();
                             }
-                        });
+                        });*/
 
                         //Ajouter la lecture des actions du bouton "Valider" de cette fenêtre
 
@@ -453,4 +453,26 @@ public class MainActivity extends AppCompatActivity {
     public void showToast(String msg){
         Toast.makeText(getApplicationContext(),msg,Toast.LENGTH_LONG).show();
     }
+
+    public boolean isServicesOK(){
+        Log.d("Maps", "isServicesOK: checking google services version");
+
+        int available = GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(MainActivity.this);
+
+        if(available == ConnectionResult.SUCCESS){
+            //everything is fine and the user can make map requests
+            Log.d("Maps", "isServicesOK: Google Play Services is working");
+            return true;
+        }
+        else if(GoogleApiAvailability.getInstance().isUserResolvableError(available)){
+            //an error occured but we can resolve it
+            Log.d("Maps", "isServicesOK: an error occured but we can fix it");
+            Dialog dialog = GoogleApiAvailability.getInstance().getErrorDialog(MainActivity.this, available, ERROR_DIALOG_REQUEST);
+            dialog.show();
+        }else{
+            Toast.makeText(this, "You can't make map requests", Toast.LENGTH_SHORT).show();
+        }
+        return false;
+    }
+
 }
