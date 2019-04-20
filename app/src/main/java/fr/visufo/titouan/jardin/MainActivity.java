@@ -9,6 +9,8 @@ import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.content.res.ResourcesCompat;
@@ -53,11 +55,14 @@ public class MainActivity extends AppCompatActivity {
         EditText cityNameEdit;
         Button settingsDoneButton;
 
+    LinearLayout plantsView;
+    LinearLayout row;
+    Button firstPlantButton;
     //Variables
     Bitmap selectedImage;
     String plantName;
     String degree;
-    String cityName;
+    double temp;
 
     static final int RESULT_LOAD_IMG = 1;
     private static final int ERROR_DIALOG_REQUEST = 9001;
@@ -69,7 +74,6 @@ public class MainActivity extends AppCompatActivity {
 
         //Attribuer le fichier activity_main comme Layout de notre activité principale
         setContentView(R.layout.activity_main);
-
         //Créer le bouton flotant (Floating Action Button)
         addFab();
 
@@ -84,6 +88,23 @@ public class MainActivity extends AppCompatActivity {
 
 
     }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+        // put your code here...
+        setContentView(R.layout.activity_main);
+        addFab();
+        loadPlants();
+
+    }
+
+    protected void onStart (){
+        super.onStart();
+        loadPlants();
+
+    }
+
 
 /*********************
  * FONCTIONS
@@ -107,7 +128,7 @@ public class MainActivity extends AppCompatActivity {
         //Ajout du deuxième sous-bouton "Paramètres" en lui donnant une id, une icone, une couleur pour le fond de l'icone ainsi qu'un label
         mSpeedDialView.addActionItem(new SpeedDialActionItem.Builder(R.id.fab_settings, R.drawable.ic_settings)
                 .setFabBackgroundColor(ResourcesCompat.getColor(getResources(), R.color.colorAccent, getTheme()))
-                .setLabel("Paramètres")
+                .setLabel("Localisation")
                 .create());
 
         //Lecture des actions appliquées au bouton flottant
@@ -122,100 +143,15 @@ public class MainActivity extends AppCompatActivity {
                     case R.id.fab_add_plant:
 
                         //On créé une fenêtre de dialogue de type "AddPlant"
-                        final AddPlantDialogClass addPlantDialog = new AddPlantDialogClass(MainActivity.this);
-                        addPlantDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-
-                        //On affiche cette fenêtre de dialogue
-                        addPlantDialog.show();
-
-                        //On récupère l'id du bouton "Valider" de la fenêtre de dialogue que l'on vient de créer
-                        addPlantDoneButton = (Button) addPlantDialog.findViewById(R.id.done_button_addPlant);
-
-                        //On récupère l'id du bouton "Ajouter une image" de la fenêtre de dialogue que l'on vient de créer
-                        addImageButton = (Button) addPlantDialog.findViewById(R.id.addImage);
-
-                        //Lecture des actions appliquées au bouton "Ajouter une image"
-                        addImageButton.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-
-                                //Création de la requête Android permettant la sélection d'une image
-                                Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);
-                                photoPickerIntent.setType("image/*");
-
-                                //Lancement de la requête à l'aide d'une fonction définie à la fin
-                                startActivityForResult(photoPickerIntent, RESULT_LOAD_IMG);
-
-                            }
-                        });
-
-
-                        //Lecture des actions appliquées au bouton "Valider"
-                        addPlantDoneButton.setOnClickListener(new View.OnClickListener() {
-
-                            @Override
-                            public void onClick(View v) {
-
-                                //On récupère l'id du champ de texte correspondant au nom de la plante
-                                plantEdit = (EditText) addPlantDialog.findViewById(R.id.plant_name);
-
-                                //On récupère l'id du champ de texte correspondant au degré de la plante
-                                degreeEdit = (EditText) addPlantDialog.findViewById(R.id.degree_nbr);
-
-                                //On récupère l'id de "l'interrupteur" indiquant si la plante est déplaçable ou non
-                                aSwitch = (Switch) addPlantDialog.findViewById(R.id.moveable_plant);
-
-                                //Définition d'un boolean récupérant l'état de l'interrupteur
-                                Boolean switchState = aSwitch.isChecked();
-
-                                //On récupère le texte entré dans le premier champ dans une variable de type String
-                                plantName = plantEdit.getText().toString().trim();
-
-                                //On récupère le texte entré dans le second champ dans une variable de type String
-                                degree = degreeEdit.getText().toString().trim();
-
-                                //Sécurités vérifiant si les champs sont bien remplis
-
-                                //Si les variables plantName et degree sont vides, donc si les deux champs ne sont pas remplis, on en informe l'utilisateur
-                                if(plantName.isEmpty() && degree.isEmpty()) {
-                                    showToast("Les champs ne sont pas remplis");
-                                //Sinon si seulement la variable degree est vide, donc si le 2e champs n'est pas rempli, on en informe l'utilisateur
-                                }else if (degree.isEmpty()) {
-                                    showToast("Indiquer un degré de gel");
-                                //Sinon si seulement la variable plantName est vide, donc si le 1er champs n'est pas rempli, on en informe l'utilisateur
-                                }else if (plantName.isEmpty()) {
-                                    showToast("Indiquer un nom de plante");
-                                //Sinon si il n'y a pas d'image de sélectionnée, on en informe l'utilisateur
-                                }else if(selectedImage==null){
-                                    showToast("Vous n'avez pas ajouté de photo");
-
-                                //Et finalement si toutes les conditions sont remplies, on ajoute les plantes à la vue principale.
-                                }else{
-                                    //Si la plante est déplaçable:
-                                    if(switchState) {
-                                        addPlantView(getApplicationContext(), plantName, degree,true);
-                                        //On ferme la fenêtre de dialogue
-                                        addPlantDialog.dismiss();
-                                    //Sinon, donc si elle ne l'est pas
-                                    }else{
-                                        addPlantView(getApplicationContext(), plantName, degree,false);
-                                        addPlantDialog.dismiss();
-                                    }
-                                }
-
-                            }
-                        });
-
+                        showAddPlantDialog();
                         mSpeedDialView.close(); //Fermeture du bouton flottant
                         return true;
-
                     //Dans le cas ou il s'agit du deuxième bouton
                     case R.id.fab_settings:
                         //On créé une fenêtre de dialogue de type "Settings"
-                        final SettingsDialogClass settingDialog = new SettingsDialogClass(MainActivity.this);
-                        /*settingDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-                        settingDialog.show();*/
+
                         if(isServicesOK()) {
+                            finish();
                             Intent intent = new Intent(MainActivity.this, MapsActivity.class);
                             startActivity(intent);
 
@@ -247,8 +183,12 @@ public class MainActivity extends AppCompatActivity {
     //Fonction ajoutant une plante à la vue d'utilisateur en fonction des différents paramètres
     public void addPlantView(Context context, String name, String degree, boolean isMovable) {
 
+        if(firstPlantButton != null) {
+            plantsView.removeView(firstPlantButton);
+        }
         //On enregistre l'image sélectionnée plus tôt sur le stockage interne du téléphone au nom de la plante à l'aide d'une fonction
         saveToInternalStorage(selectedImage, name);
+
 
         //On défini la plante sélectionnée à "null" pour éviter que si l'utilisateur ajoute plusieurs plantes d'affilée, elles aient la même photo
         selectedImage = null;
@@ -259,25 +199,93 @@ public class MainActivity extends AppCompatActivity {
         //On récupère l'id de la vue principale, dans laquelle on va afficher les plantes
         LinearLayout contentMain = (LinearLayout) findViewById(R.id.mainLinearLayout);
 
-        //Création d'une nouvelle vue de type "PlantView"
+        String data = readFromFile(getApplicationContext(),"Localisation.latLng");
         PlantView plantView = new PlantView(context, null);
-        plantView.setName(name);
-        plantView.setDegree(degree);
-        plantView.setInfo("Info info info info");
 
+        String[] latLgn;
+        latLgn = data.split(";");
+
+        if(!(data.isEmpty())){
+            Log.v("Latitude", latLgn[0]);
+            Log.v("Longitude", latLgn[1]);
+            double latitude = Double.parseDouble(latLgn[0]);
+            double longitude = Double.parseDouble(latLgn[1]);
+            temp = WeatherClass.setWeatherCity(latitude, longitude, getApplicationContext());
+        }else{
+            temp = 100000;
+        }
+        if(isNetworkAvailable()) {
+            if(temp == 100000){
+                plantView.setName(plantName);
+                plantView.setDegree(degree);
+                plantView.setInfo("Vous n'avez pas encore indiqué de localisation");
+                contentMain.invalidate();
+                contentMain.requestLayout();
+            }else if(temp == -1000000){
+                plantView.setName(plantName);
+                plantView.setDegree(degree);
+                plantView.setInfo("Problème lié au chargement de la météo");
+                contentMain.invalidate();
+                contentMain.requestLayout();
+            }else if (temp < Double.parseDouble(degree)) {
+                plantView.setName(plantName);
+                plantView.setDegree(degree);
+                plantView.setInfo("Température inférieure au degré de gel");
+                plantView.changeBackgroundColor("#ff7961");
+                contentMain.invalidate();
+                contentMain.requestLayout();
+
+            }else if (temp > Double.parseDouble(degree)) {
+                plantView.setName(plantName);
+                plantView.setDegree(degree);
+                plantView.setInfo("Pas de problème pour cette plante");
+                contentMain.invalidate();
+                contentMain.requestLayout();
+
+            }else {
+                plantView.setName(plantName);
+                plantView.setDegree(degree);
+                plantView.setInfo("Problème lié au chargement de la météo");
+                contentMain.invalidate();
+                contentMain.requestLayout();
+            }
+        }else if(isNetworkAvailable()==false){
+            plantView.setName(plantName);
+            plantView.setDegree(degree);
+            plantView.setInfo("Pas d'accès internet");
+        }
         //On récupère l'image au nom de la plante depuis le stockage interne et on l'ajoute à la "PlantView" définie juste au-dessus
         showImageFromStorage(plantView, name);
 
         //Et finalement on ajoute la "PlantView" que l'on vient de définir à la vue principale
         contentMain.addView(plantView);
+
     }
 
     //Fonction utilisée pour charger les plantes au démarrage de l'application
     public void loadPlants() {
-
+        Log.v("LOAD PLANT", "Chargement des plantes");
         File[] files = listTxt();
         //Si le tableau n'est pas vide
-        if (!(files == null)) {
+        if (files.length != 0) {
+
+            String data = readFromFile(getApplicationContext(), "Localisation.latLng");
+
+
+            String[] latLgn;
+            latLgn = data.split(";");
+
+            if(!(data.isEmpty())){
+                Log.v("Latitude", latLgn[0]);
+                Log.v("Longitude", latLgn[1]);
+                double latitude = Double.parseDouble(latLgn[0]);
+                double longitude = Double.parseDouble(latLgn[1]);
+                temp = WeatherClass.setWeatherCity(latitude, longitude, getApplicationContext());
+            }else{
+                temp = 100000;
+            }
+
+            //LayoutInflater inflater = LayoutInflater.from(getApplicationContext());
             //Boucle pour afficher chaque plante sur la vue principale, en fonction du nombre de fichiers, donc du nombre de plantes enregistrées
             for (int i = 0; i < files.length; i++) {
 
@@ -298,28 +306,186 @@ public class MainActivity extends AppCompatActivity {
                 boolean isMovable = Boolean.valueOf(plantAttributs[2]);
 
                 //Création d'une nouvelle plante, en créant une variable de type "Plant"
-                Plant plant = new Plant(getApplicationContext(),plantName , degree,isMovable);
+                Plant plant = new Plant(getApplicationContext(), plantName, degree, isMovable);
 
                 //On récupère l'id de la vue principale
                 LinearLayout contentMain = (LinearLayout) findViewById(R.id.mainLinearLayout);
 
-                //Création d'une nouvelle vue de type "PlantView"
+
                 PlantView plantView = new PlantView(getApplicationContext(), null);
 
-                plantView.setName(plantName);
-                plantView.setDegree(degree);
-                plantView.setInfo("Info info info info");
 
-                Log.v("Plantes:", plantName+": "+ degree +"°C " + "Déplaçable : "+isMovable);
+                //Création d'une nouvelle vue de type "PlantView"
+
+                Log.v("Temp", temp + ", before");
+                if(isNetworkAvailable()) {
+                    if(temp == 100000){
+                        plantView.setName(plantName);
+                        plantView.setDegree(degree);
+                        plantView.setInfo("Vous n'avez pas encore indiqué de localisation");
+                        contentMain.invalidate();
+                        contentMain.requestLayout();
+                    }else if(temp == -1000000){
+                        plantView.setName(plantName);
+                        plantView.setDegree(degree);
+                        plantView.setInfo("Problème lié au chargement de la météo");
+                        contentMain.invalidate();
+                        contentMain.requestLayout();
+                    }else if (temp < Double.parseDouble(degree)) {
+                        plantView.setName(plantName);
+                        plantView.setDegree(degree);
+                        plantView.setInfo("Température inférieure au degré de gel");
+                        plantView.changeBackgroundColor("#ff7961");
+                        contentMain.invalidate();
+                        contentMain.requestLayout();
+
+                    }else if (temp > Double.parseDouble(degree)) {
+                        plantView.setName(plantName);
+                        plantView.setDegree(degree);
+                        plantView.setInfo("Pas de problème pour cette plante");
+                        contentMain.invalidate();
+                        contentMain.requestLayout();
+
+                    }else {
+                        plantView.setName(plantName);
+                        plantView.setDegree(degree);
+                        plantView.setInfo("Problème lié au chargement de la météo");
+                        contentMain.invalidate();
+                        contentMain.requestLayout();
+                    }
+                }else if(isNetworkAvailable()==false){
+                    plantView.setName(plantName);
+                    plantView.setDegree(degree);
+                    plantView.setInfo("Pas d'accès internet");
+                }
+
+
+
+                Log.v("Plantes:", plantName + ": " + degree + "°C " + "Déplaçable : " + isMovable);
 
                 //On ajoute l'image de la photo en question à la vue
                 showImageFromStorage(plantView, plantName);
 
                 //On ajoute la "PlantView" à la vue principale
                 contentMain.addView(plantView);
+            }
+
+
+        }else{
+            //showToast("Vous n'avez pas encore de plantes enregistrées");
+
+            plantsView = findViewById(R.id.mainLinearLayout);
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.WRAP_CONTENT,
+                    LinearLayout.LayoutParams.WRAP_CONTENT
+            );
+            params.setMargins(25, 0, 25, 0);
+
+            firstPlantButton = new Button(this);
+            firstPlantButton.setLayoutParams(params);
+            firstPlantButton.setText("Ajouter votre première plante");
+            firstPlantButton.setAllCaps(false);
+            firstPlantButton.setBackgroundResource(R.drawable.ripple_bg_shape);
+            firstPlantButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                   showAddPlantDialog();
+                }
+            });
+            plantsView.addView(firstPlantButton);
+
+
+
+        }
+    }
+
+    public void showAddPlantDialog(){
+        final AddPlantDialogClass addPlantDialog = new AddPlantDialogClass(MainActivity.this);
+        addPlantDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
+        //On affiche cette fenêtre de dialogue
+        addPlantDialog.show();
+
+        //On récupère l'id du bouton "Valider" de la fenêtre de dialogue que l'on vient de créer
+        addPlantDoneButton = (Button) addPlantDialog.findViewById(R.id.done_button_addPlant);
+
+        //On récupère l'id du bouton "Ajouter une image" de la fenêtre de dialogue que l'on vient de créer
+        addImageButton = (Button) addPlantDialog.findViewById(R.id.addImage);
+
+        //Lecture des actions appliquées au bouton "Ajouter une image"
+        addImageButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                //Création de la requête Android permettant la sélection d'une image
+                Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);
+                photoPickerIntent.setType("image/*");
+
+                //Lancement de la requête à l'aide d'une fonction définie à la fin
+                startActivityForResult(photoPickerIntent, RESULT_LOAD_IMG);
 
             }
-        }
+        });
+
+
+        //Lecture des actions appliquées au bouton "Valider"
+        addPlantDoneButton.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+
+                //On récupère l'id du champ de texte correspondant au nom de la plante
+                plantEdit = (EditText) addPlantDialog.findViewById(R.id.plant_name);
+
+                //On récupère l'id du champ de texte correspondant au degré de la plante
+                degreeEdit = (EditText) addPlantDialog.findViewById(R.id.degree_nbr);
+
+                //On récupère l'id de "l'interrupteur" indiquant si la plante est déplaçable ou non
+                aSwitch = (Switch) addPlantDialog.findViewById(R.id.moveable_plant);
+
+                //Définition d'un boolean récupérant l'état de l'interrupteur
+                Boolean switchState = aSwitch.isChecked();
+
+                //On récupère le texte entré dans le premier champ dans une variable de type String
+                plantName = plantEdit.getText().toString().trim();
+
+                //On récupère le texte entré dans le second champ dans une variable de type String
+                degree = degreeEdit.getText().toString().trim();
+
+                //Sécurités vérifiant si les champs sont bien remplis
+
+                //Si les variables plantName et degree sont vides, donc si les deux champs ne sont pas remplis, on en informe l'utilisateur
+                if(plantName.isEmpty() && degree.isEmpty()) {
+                    showToast("Les champs ne sont pas remplis");
+                    //Sinon si seulement la variable degree est vide, donc si le 2e champs n'est pas rempli, on en informe l'utilisateur
+                }else if (degree.isEmpty()) {
+                    showToast("Indiquer un degré de gel");
+                    //Sinon si seulement la variable plantName est vide, donc si le 1er champs n'est pas rempli, on en informe l'utilisateur
+                }else if (plantName.isEmpty()) {
+                    showToast("Indiquer un nom de plante");
+                    //Sinon si il n'y a pas d'image de sélectionnée, on en informe l'utilisateur
+                }else if(selectedImage==null){
+                    showToast("Vous n'avez pas ajouté de photo");
+
+                    //Et finalement si toutes les conditions sont remplies, on ajoute les plantes à la vue principale.
+                }else{
+                    //Si la plante est déplaçable:
+                    if(switchState) {
+                        addPlantView(getApplicationContext(), plantName, degree,true);
+                        //On ferme la fenêtre de dialogue
+                        addPlantDialog.dismiss();
+                        //Sinon, donc si elle ne l'est pas
+                    }else{
+                        addPlantView(getApplicationContext(), plantName, degree,false);
+                        addPlantDialog.dismiss();
+                    }
+                }
+
+            }
+        });
+
+
+
     }
 
     //Fonction permettant de retourner le contenu d'un fichier
@@ -390,7 +556,7 @@ public class MainActivity extends AppCompatActivity {
         try {
             fos = new FileOutputStream(mypath);
             //On recadre l'image à l'aide d'une fonction, avant de l'enregistrer pour pas prendre trop de place sur le téléphone et pour réduire le temps de chargement
-            bitmapImage = getResizedBitmap(bitmapImage,100);
+            bitmapImage = getResizedBitmap(bitmapImage,200);
             bitmapImage.compress(Bitmap.CompressFormat.JPEG, 100, fos);
             Toast.makeText(getApplicationContext(), "Fichier enregistré " + plantName, Toast.LENGTH_SHORT).show();
 
@@ -451,7 +617,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void showToast(String msg){
-        Toast.makeText(getApplicationContext(),msg,Toast.LENGTH_LONG).show();
+        Toast.makeText(getApplicationContext(),msg,Toast.LENGTH_SHORT).show();
     }
 
     public boolean isServicesOK(){
@@ -474,5 +640,12 @@ public class MainActivity extends AppCompatActivity {
         }
         return false;
     }
+    private boolean isNetworkAvailable() {
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
+    }
+
 
 }

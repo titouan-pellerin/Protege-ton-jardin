@@ -4,6 +4,8 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Bitmap;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -11,13 +13,10 @@ import android.transition.ChangeBounds;
 import android.transition.TransitionManager;
 import android.transition.TransitionSet;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.AnimationUtils;
-import android.view.animation.BounceInterpolator;
-import android.view.animation.ScaleAnimation;
 import android.widget.FrameLayout;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -107,7 +106,8 @@ public class PlantView extends FrameLayout {
         infoView = findViewById(R.id.info);
         degreeView = findViewById(R.id.degree);
         imageView = findViewById(R.id.image);
-        planteBg = findViewById(R.id.plante);
+        planteBg = findViewById(R.id.plante_bg);
+
         setupView();
     }
     //Fonction permettant d'"installer" la vue
@@ -153,15 +153,24 @@ public class PlantView extends FrameLayout {
      */
     public void setName(String name) {
         nameView.setText(name);
+        invalidate();
     }
     public void setInfo(String info){
         infoView.setText(info);
+        invalidate();
     }
     public void setDegree(String degree){
         degreeView.setText(degree+" °C");
+        invalidate();
     }
     public void setImage(Bitmap image){
         imageView.setImageBitmap(image);
+        invalidate();
+    }
+
+    public void changeBackgroundColor(String color){
+        planteBg.getBackground().setColorFilter(Color.parseColor(color), PorterDuff.Mode.SRC_OVER);
+        Log.v("Plant View", "Changing background color");
     }
 
 

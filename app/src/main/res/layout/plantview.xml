@@ -12,7 +12,7 @@
     android:orientation="horizontal"
     android:layout_gravity="center">
     <LinearLayout
-        android:id="@+id/plante"
+        android:id="@+id/plante_bg"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/ripple_bg_shape">

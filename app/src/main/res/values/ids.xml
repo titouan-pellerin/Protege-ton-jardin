@@ -2,4 +2,5 @@
 <resources>
     <item name="fab_add_plant" type="id" />
     <item name="fab_settings" type="id" />
+
 </resources>

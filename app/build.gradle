@@ -48,7 +48,4 @@ dependencies {
 
 }
 
-dependencies {
-    implementation 'com.google.android.gms:play-services-maps:+'
-    implementation 'com.android.support:appcompat-v7:28.+'
-}
+

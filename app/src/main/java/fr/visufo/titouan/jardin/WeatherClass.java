@@ -2,7 +2,6 @@ package fr.visufo.titouan.jardin;
 
 import android.content.Context;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.visuality.f32.temperature.Temperature;
 import com.visuality.f32.temperature.TemperatureUnit;
@@ -18,11 +17,13 @@ import java.util.List;
 
 public class WeatherClass {
 
-    private static String OPEN_WEATHER_MAP_API = "f296d96e2cc0b7b08741e0b238731746";
+    static double temp = 0.0;
+
+    private static String OPEN_WEATHER_MAP_API = "97e202a04a512514be6c36668fb2a5e3";
 
 
-    public static void setWeatherCity(final double latitude, double longitude, final Context context){
-        new WeatherManager(OPEN_WEATHER_MAP_API).getFiveDayForecastByCoordinates(latitude,longitude,
+    public static double setWeatherCity(final double latitude, double longitude, final Context context){
+        new WeatherManager("97e202a04a512514be6c36668fb2a5e3").getFiveDayForecastByCoordinates(latitude,longitude,
                 new WeatherManager.ForecastHandler() {
                     @Override
                     public void onReceivedForecast(WeatherManager manager, Forecast forecast) {
@@ -40,8 +41,9 @@ public class WeatherClass {
                         }
                         int  minIndex = list.indexOf(Collections.min(list));
                         Log.v("Weather MINI", "Température mini : " + list.get(minIndex));
-                        Toast.makeText(context, "Température mini: " + list.get(minIndex), Toast.LENGTH_LONG).show();
-
+                        //Toast.makeText(context, "Température mini: " + list.get(minIndex), Toast.LENGTH_LONG).show();
+                        temp =  list.get(minIndex);
+                        Log.v("WeatherClass", temp + "");
 
 
 
@@ -56,11 +58,12 @@ public class WeatherClass {
                     @Override
                     public void onFailedToReceiveForecast(WeatherManager manager) {
                         Log.v("TAG",  " ERREUR");
+                        temp = -1000000;
 
                     }
                 }
         );
-
+        return temp;
     }
 
 

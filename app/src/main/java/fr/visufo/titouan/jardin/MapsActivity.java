@@ -63,6 +63,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mapFragment.getMapAsync(this);
     }
 
+    @Override
+    public void onBackPressed() {
+        Intent intent = new Intent(getApplicationContext(),MainActivity.class);
+        startActivity(intent);
+        finish();
+    }
+
 
     /**
      * Manipulates the map once available.
@@ -108,25 +115,20 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 marker = mMap.addMarker(new MarkerOptions()
                         .position(point)
                         .title("Localisation")
-                        .snippet("Test")
+                        .snippet("L'application utilisera ce lieu comme référence pour la météo")
                         .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
                 button = (Button) findViewById(R.id.buttonMaps);
                 button.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         writeToFile(point,getApplicationContext());
+                        finish();
                         Intent intent = new Intent(getApplicationContext(),MainActivity.class);
                         startActivity(intent);
-                        String data = readFromFile(getApplicationContext(),"Localisation.latLng");
 
-                        String[] latLgn;
-                        latLgn = data.split(";");
-                        double latitude = Double.parseDouble(latLgn[0]);
-                        Log.v("Latitude", latLgn[0]);
-                        Log.v("Longitude", latLgn[1]);
 
-                        double longitude = Double.parseDouble(latLgn[1]);
-                        WeatherClass.setWeatherCity(latitude,longitude,getApplicationContext());
+
+
                     }
                 });
             }
