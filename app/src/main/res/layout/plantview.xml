@@ -9,8 +9,9 @@
     android:layout_centerInParent="true"
     android:layout_marginVertical="5dp"
     android:layout_marginHorizontal="5dp"
-    android:orientation="horizontal"
+    android:orientation="vertical"
     android:layout_gravity="center">
+
     <LinearLayout
         android:id="@+id/plante_bg"
         android:layout_width="match_parent"
@@ -26,8 +27,8 @@
             app:civ_border_width="0dp"
             android:layout_marginLeft="8dp"
             android:layout_gravity="center"/>
-
         <LinearLayout
+            android:id="@+id/textes"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="8dp"
@@ -43,7 +44,7 @@
                 android:gravity="left"
                 android:text="Cactus"
                 android:textSize="23sp"
-                android:fontFamily="@font/raleway_light"
+                android:fontFamily="@font/raleway_semibold"
                 android:textColor="#1E1E1E"
                 app:underlineColor="#6DB85C"
                 app:underlineWidth="10px"/>
@@ -54,7 +55,10 @@
                 android:layout_marginTop="3dp"
                 android:layout_marginEnd="5dp"
                 android:layout_marginRight="5dp"
-                android:text="Pas de problème pour cette plante"/>
+                android:text="Pas de problème pour cette plante"
+                android:fontFamily="@font/raleway_regular"/>
+
+
 
 
         </LinearLayout>
@@ -77,13 +81,10 @@
                 android:gravity="center"
                 android:fontFamily="@font/roboto_regular"
                 android:text="-10°C"
-                android:textSize="20sp"
+                android:textSize="16sp"
                 android:textColor="#636363"/>
         </LinearLayout>
-
-
-
-
-
     </LinearLayout>
+
+
 </LinearLayout>

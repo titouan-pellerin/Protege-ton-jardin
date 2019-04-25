@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ripple xmlns:android="http://schemas.android.com/apk/res/android"
-    android:color="?attr/colorControlHighlight">
+    android:color="@color/ripple">
     <item>
         <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
 
@@ -21,7 +21,7 @@
 
                     <!--If your shape requires only one solid color-->
                     <solid
-                        android:color="#6DB85C" />-->
+                        android:color="#8c8e91" />-->
 
                     <size
                         android:width="50dp"
@@ -31,10 +31,10 @@
 
                     <!--If you want to add padding-->
                     <padding
-                         android:left="8dp"
-                         android:top="8dp"
-                         android:right="8dp"
-                         android:bottom="8dp" />
+                        android:left="8dp"
+                        android:top="8dp"
+                        android:right="8dp"
+                        android:bottom="8dp" />
 
                 </shape>
             </item>
@@ -46,7 +46,7 @@
                     android:viewportHeight="24">
                     <path
                         android:fillColor="#FFFFFF"
-                        android:pathData="M9,16.2L4.8,12l-1.4,1.4L9,19 21,7l-1.4,-1.4L9,16.2z"/>
+                        android:pathData="M17,15.6L15.6,17L12,13.4L8.4,17L7,15.6l3.6-3.6L7,8.4L8.4,7l3.6,3.6L15.6,7L17,8.4L13.4,12L17,15.6z"/>
                 </vector>
 
             </item>

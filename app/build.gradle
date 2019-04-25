@@ -38,8 +38,12 @@ dependencies {
 dependencies {
     implementation 'com.leinardi.android:speed-dial:2.0.1'
     implementation 'de.hdodenhof:circleimageview:2.1.0'
-    implementation 'com.visuality.f32forandroid:f32:2.4'
     implementation 'com.google.android.gms:play-services-location:16.0.0'
+    implementation 'com.android.support:recyclerview-v7:28.0.0'
+    implementation 'com.android.support:support-v4:28.+'
+    implementation "com.daimajia.swipelayout:library:1.2.0@aar"
+    implementation 'com.github.zurche:open-weather-map-android-wrapper:v0.1'
+    implementation 'com.visuality.f32forandroid:f32:2.4'
 }
 
 dependencies {

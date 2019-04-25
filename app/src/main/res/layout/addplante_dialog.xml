@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -20,7 +19,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
                 android:layout_gravity="center"
-                app:fontFamily="@font/raleway"
+                app:fontFamily="@font/raleway_semibold"
                 android:text="Ajout d'une plante"
                 android:textColor="#444444"
                 android:textSize="28sp"
@@ -46,7 +45,7 @@
                     android:textColor="#000000"
                     android:textAllCaps="false"
                     android:textSize="15sp"
-                    app:fontFamily="@font/raleway"/>
+                    app:fontFamily="@font/raleway_medium"/>
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -63,7 +62,7 @@
                                 android:layout_height="wrap_content"
                                 android:hint="Nom de la plante"
                                 android:inputType="textPersonName"
-                                app:fontFamily="@font/raleway"/>
+                                app:fontFamily="@font/raleway_semibold"/>
 
                         </android.support.design.widget.TextInputLayout>
                     </LinearLayout>
@@ -82,8 +81,7 @@
                     android:layout_weight="1"
                     android:text="Plante déplaçable:"
                     android:textSize="16sp"
-                    app:fontFamily="@font/raleway"
-                    android:fontFamily="@font/raleway"/>
+                    android:fontFamily="@font/raleway_semibold"/>
             </LinearLayout>
 
             <LinearLayout
@@ -101,7 +99,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:hint="Degré de gel"
-                    app:fontFamily="@font/raleway"
+                    app:fontFamily="@font/raleway_semibold"
                     android:inputType="numberSigned"/>
                 <TextView
                     android:id="@+id/value_unit_symbol"
@@ -109,7 +107,7 @@
                     android:layout_height="25dp"
                     android:text="°C"
                     android:textSize="20sp"
-                    app:fontFamily="@font/raleway"/>
+                    app:fontFamily="@font/raleway_semibold"/>
             </LinearLayout>
             <LinearLayout
                 android:layout_width="match_parent"

@@ -17,13 +17,12 @@ import java.util.List;
 
 public class WeatherClass {
 
-    static double temp = 0.0;
-
-    private static String OPEN_WEATHER_MAP_API = "97e202a04a512514be6c36668fb2a5e3";
+    private static double temp = 0.0;
 
 
-    public static double setWeatherCity(final double latitude, double longitude, final Context context){
-        new WeatherManager("97e202a04a512514be6c36668fb2a5e3").getFiveDayForecastByCoordinates(latitude,longitude,
+    public static double getTemp(double latitude, double longitude, Context context){
+        String OPEN_WEATHER_MAP_API = "97e202a04a512514be6c36668fb2a5e3";
+        new WeatherManager(OPEN_WEATHER_MAP_API).getFiveDayForecastByCoordinates(latitude,longitude,
                 new WeatherManager.ForecastHandler() {
                     @Override
                     public void onReceivedForecast(WeatherManager manager, Forecast forecast) {

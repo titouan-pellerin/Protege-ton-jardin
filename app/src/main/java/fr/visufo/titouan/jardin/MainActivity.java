@@ -17,6 +17,7 @@ import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -38,7 +39,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
-
 public class MainActivity extends AppCompatActivity {
 
     //Views
@@ -51,67 +51,39 @@ public class MainActivity extends AppCompatActivity {
         Button addPlantDoneButton;
         Switch aSwitch;
 
-        //SettingsDialog
-        EditText cityNameEdit;
-        Button settingsDoneButton;
 
     LinearLayout plantsView;
-    LinearLayout row;
     Button firstPlantButton;
     //Variables
     Bitmap selectedImage;
     String plantName;
     String degree;
-    double temp;
 
     static final int RESULT_LOAD_IMG = 1;
     private static final int ERROR_DIALOG_REQUEST = 9001;
+
+    double temp;
 
     //Actions au lancement de l'application
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         //Attribuer le fichier activity_main comme Layout de notre activité principale
         setContentView(R.layout.activity_main);
         //Créer le bouton flotant (Floating Action Button)
         addFab();
-
         //Charge les plantes enregistrées au démarrage de l'application
         loadPlants();
+        LinearLayout linearLayout = findViewById(R.id.mainLinearLayout);
 
-
-
-
-
-
-
-
-    }
-
-    @Override
-    public void onResume(){
-        super.onResume();
-        // put your code here...
-        setContentView(R.layout.activity_main);
-        addFab();
-        loadPlants();
-
-    }
-
-    protected void onStart (){
-        super.onStart();
-        loadPlants();
-
+        linearLayout.invalidate();
+        refreshView(linearLayout);
     }
 
 
 /*********************
  * FONCTIONS
  * *******************/
-
-
-
 
     //Fonction permettant de créer le bouton flottant
     public void addFab() {
@@ -194,40 +166,43 @@ public class MainActivity extends AppCompatActivity {
         selectedImage = null;
 
         //Création d'une variable de type "Plant" avec les différents paramètres
-        Plant plant = new Plant(context, name, degree, isMovable);
+        Plant plant = new Plant(getApplicationContext(), plantName, degree, isMovable);
 
         //On récupère l'id de la vue principale, dans laquelle on va afficher les plantes
-        LinearLayout contentMain = (LinearLayout) findViewById(R.id.mainLinearLayout);
+        LinearLayout contentMain = findViewById(R.id.mainLinearLayout);
 
         String data = readFromFile(getApplicationContext(),"Localisation.latLng");
         PlantView plantView = new PlantView(context, null);
 
         String[] latLgn;
         latLgn = data.split(";");
-
+        double tempAdd;
         if(!(data.isEmpty())){
             Log.v("Latitude", latLgn[0]);
             Log.v("Longitude", latLgn[1]);
             double latitude = Double.parseDouble(latLgn[0]);
             double longitude = Double.parseDouble(latLgn[1]);
-            temp = WeatherClass.setWeatherCity(latitude, longitude, getApplicationContext());
+            tempAdd = WeatherClass.getTemp(latitude,longitude,getApplicationContext());
+            showToast(tempAdd+"");
+            Log.v("Add", tempAdd+"");
+
         }else{
-            temp = 100000;
+            tempAdd = 100000;
         }
         if(isNetworkAvailable()) {
-            if(temp == 100000){
+            if(tempAdd == 100000){
                 plantView.setName(plantName);
                 plantView.setDegree(degree);
                 plantView.setInfo("Vous n'avez pas encore indiqué de localisation");
                 contentMain.invalidate();
                 contentMain.requestLayout();
-            }else if(temp == -1000000){
+            }else if(tempAdd == -1000000){
                 plantView.setName(plantName);
                 plantView.setDegree(degree);
                 plantView.setInfo("Problème lié au chargement de la météo");
                 contentMain.invalidate();
                 contentMain.requestLayout();
-            }else if (temp < Double.parseDouble(degree)) {
+            }else if (tempAdd < Double.parseDouble(degree)) {
                 plantView.setName(plantName);
                 plantView.setDegree(degree);
                 plantView.setInfo("Température inférieure au degré de gel");
@@ -235,7 +210,7 @@ public class MainActivity extends AppCompatActivity {
                 contentMain.invalidate();
                 contentMain.requestLayout();
 
-            }else if (temp > Double.parseDouble(degree)) {
+            }else if (tempAdd > Double.parseDouble(degree)) {
                 plantView.setName(plantName);
                 plantView.setDegree(degree);
                 plantView.setInfo("Pas de problème pour cette plante");
@@ -249,7 +224,7 @@ public class MainActivity extends AppCompatActivity {
                 contentMain.invalidate();
                 contentMain.requestLayout();
             }
-        }else if(isNetworkAvailable()==false){
+        }else if(!isNetworkAvailable()){
             plantView.setName(plantName);
             plantView.setDegree(degree);
             plantView.setInfo("Pas d'accès internet");
@@ -274,23 +249,26 @@ public class MainActivity extends AppCompatActivity {
 
             String[] latLgn;
             latLgn = data.split(";");
-
-            if(!(data.isEmpty())){
+            double tempLoad;
+            if(!(data.isEmpty())) {
                 Log.v("Latitude", latLgn[0]);
                 Log.v("Longitude", latLgn[1]);
                 double latitude = Double.parseDouble(latLgn[0]);
                 double longitude = Double.parseDouble(latLgn[1]);
-                temp = WeatherClass.setWeatherCity(latitude, longitude, getApplicationContext());
-            }else{
-                temp = 100000;
-            }
+                tempLoad = WeatherClass.getTemp(latitude,longitude,this);
+                showToast(tempLoad+"");
+                Log.v("Load", tempLoad+"");
 
+
+            }else{
+                tempLoad = 100000;
+            }
             //LayoutInflater inflater = LayoutInflater.from(getApplicationContext());
             //Boucle pour afficher chaque plante sur la vue principale, en fonction du nombre de fichiers, donc du nombre de plantes enregistrées
-            for (int i = 0; i < files.length; i++) {
+            for (File file : files) {
 
                 //à chaque tour de boucle, on récupère le nom du fichier dans une variable
-                String fileName = files[i].getName();
+                String fileName = file.getName();
                 //on récupère le contenu du fichier possédant le nom défini juste au-dessus à l'aide d'une fonction
                 String fileContent = readFromFile(getApplicationContext(), fileName);
                 //création d'un tableau de String pour y ajouter le contenu du fichier txt
@@ -309,7 +287,7 @@ public class MainActivity extends AppCompatActivity {
                 Plant plant = new Plant(getApplicationContext(), plantName, degree, isMovable);
 
                 //On récupère l'id de la vue principale
-                LinearLayout contentMain = (LinearLayout) findViewById(R.id.mainLinearLayout);
+                LinearLayout contentMain = findViewById(R.id.mainLinearLayout);
 
 
                 PlantView plantView = new PlantView(getApplicationContext(), null);
@@ -317,48 +295,55 @@ public class MainActivity extends AppCompatActivity {
 
                 //Création d'une nouvelle vue de type "PlantView"
 
-                Log.v("Temp", temp + ", before");
-                if(isNetworkAvailable()) {
-                    if(temp == 100000){
+                if (isNetworkAvailable()) {
+                    if (tempLoad == 100000) {
                         plantView.setName(plantName);
                         plantView.setDegree(degree);
                         plantView.setInfo("Vous n'avez pas encore indiqué de localisation");
                         contentMain.invalidate();
-                        contentMain.requestLayout();
-                    }else if(temp == -1000000){
+                        refreshView(contentMain);
+                    } else if (tempLoad == -1000000) {
                         plantView.setName(plantName);
                         plantView.setDegree(degree);
                         plantView.setInfo("Problème lié au chargement de la météo");
                         contentMain.invalidate();
-                        contentMain.requestLayout();
-                    }else if (temp < Double.parseDouble(degree)) {
+                        refreshView(contentMain);
+
+                    } else if (tempLoad == 0.0) {
+                        /*finish();
+                        startActivity(this.getIntent());*/
+                        plantView.setName(plantName);
+                        plantView.setDegree(degree);
+                        plantView.setInfo("Problème lié au chargement de la météo");
+                        contentMain.invalidate();
+                        refreshView(contentMain);
+                    } else if (tempLoad < Double.parseDouble(degree)) {
                         plantView.setName(plantName);
                         plantView.setDegree(degree);
                         plantView.setInfo("Température inférieure au degré de gel");
                         plantView.changeBackgroundColor("#ff7961");
                         contentMain.invalidate();
-                        contentMain.requestLayout();
+                        refreshView(contentMain);
 
-                    }else if (temp > Double.parseDouble(degree)) {
+                    } else if (tempLoad > Double.parseDouble(degree)) {
                         plantView.setName(plantName);
                         plantView.setDegree(degree);
                         plantView.setInfo("Pas de problème pour cette plante");
                         contentMain.invalidate();
-                        contentMain.requestLayout();
+                        refreshView(contentMain);
 
-                    }else {
+                    } else {
                         plantView.setName(plantName);
                         plantView.setDegree(degree);
                         plantView.setInfo("Problème lié au chargement de la météo");
                         contentMain.invalidate();
-                        contentMain.requestLayout();
+                        refreshView(contentMain);
                     }
-                }else if(isNetworkAvailable()==false){
+                } else if (!isNetworkAvailable()) {
                     plantView.setName(plantName);
                     plantView.setDegree(degree);
                     plantView.setInfo("Pas d'accès internet");
                 }
-
 
 
                 Log.v("Plantes:", plantName + ": " + degree + "°C " + "Déplaçable : " + isMovable);
@@ -380,12 +365,12 @@ public class MainActivity extends AppCompatActivity {
                     LinearLayout.LayoutParams.WRAP_CONTENT
             );
             params.setMargins(25, 0, 25, 0);
-
             firstPlantButton = new Button(this);
             firstPlantButton.setLayoutParams(params);
-            firstPlantButton.setText("Ajouter votre première plante");
+            firstPlantButton.setText(R.string.firstPlantText);
             firstPlantButton.setAllCaps(false);
             firstPlantButton.setBackgroundResource(R.drawable.ripple_bg_shape);
+            firstPlantButton.setTypeface(FontsUtils.getRalewayRegular(getApplicationContext()));
             firstPlantButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -645,6 +630,11 @@ public class MainActivity extends AppCompatActivity {
                 = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
         return activeNetworkInfo != null && activeNetworkInfo.isConnected();
+    }
+
+    public void refreshView(ViewGroup view){
+        view.setVisibility(View.GONE);
+        view.setVisibility(View.VISIBLE);
     }
 
 

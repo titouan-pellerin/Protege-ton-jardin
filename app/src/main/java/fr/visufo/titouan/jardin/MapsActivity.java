@@ -49,7 +49,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     LocationRequest mLocationRequest;
     Location mLastLocation;
     Button button;
-
+    double temp;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -115,7 +115,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 marker = mMap.addMarker(new MarkerOptions()
                         .position(point)
                         .title("Localisation")
-                        .snippet("L'application utilisera ce lieu comme référence pour la météo")
                         .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
                 button = (Button) findViewById(R.id.buttonMaps);
                 button.setOnClickListener(new View.OnClickListener() {
@@ -125,6 +124,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         finish();
                         Intent intent = new Intent(getApplicationContext(),MainActivity.class);
                         startActivity(intent);
+
 
 
 
@@ -153,7 +153,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             if (locationList.size() > 0) {
                 //The last location in the list is the newest
                 Location location = locationList.get(locationList.size() - 1);
-                Log.i("MapsActivity", "Location: " + location.getLatitude() + " " + location.getLongitude());
+                //Log.i("MapsActivity", "Location: " + location.getLatitude() + " " + location.getLongitude());
                 mLastLocation = location;
                 if (marker != null) {
                     marker.remove();
@@ -247,13 +247,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         if(file != null){
             file.delete();
         }
-        Double latitude = latLng.latitude;
-        Double longitude = latLng.longitude;
+        double latitude = latLng.latitude;
+        double longitude = latLng.longitude;
         try {
-            Log.v("Localisation", latitude.toString() +";"+ longitude.toString());
+            //Log.v("Localisation", latitude.toString() +";"+ longitude.toString());
             //Créer fichier avec les coordonnées GPS
             OutputStreamWriter outputStreamWriter = new OutputStreamWriter(context.openFileOutput("Localisation.latLng", Context.MODE_PRIVATE));
-            outputStreamWriter.write(latitude.toString()+ ";"+longitude.toString());
+            outputStreamWriter.write(latitude+ ";"+longitude);
             outputStreamWriter.close();
         }
         catch (IOException e) {
