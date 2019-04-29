@@ -1,17 +1,6 @@
 <resources>
-    <string name="app_name">Jardin</string>
+    <string name="app_name">Protège ton jardin</string>
     <string name="action_settings">Settings</string>
-    <string name="plante1">Plante 1</string>
-    <string name="plante2">Plante 2</string>
-    <string name="plante3">Plante 3</string>
-    <string name="plante4">Plante 4</string>
-    <string name="plante5">Plante 5</string>
-    <string name="plante6">Plante 6</string>
-    <string name="plante7">Plante 7</string>
-    <string name="plante8">Plante 8</string>
-    <string name="plante9">Plante 9</string>
-    <string name="plante10">Plante 10</string>
-    <string name="OPEN_WEATHER_MAP_API_KEY">f296d96e2cc0b7b08741e0b238731746</string>
     <string name="title_activity_maps">Map</string>
     <string name="firstPlantText">Ajouter votre première plante</string>
 

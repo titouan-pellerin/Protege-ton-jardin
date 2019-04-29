@@ -1,5 +1,6 @@
 package fr.visufo.titouan.jardin;
 
+import android.animation.LayoutTransition;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -143,10 +144,16 @@ public class PlantView extends FrameLayout {
         removeButton.setAllCaps(false);
         removeButton.setTypeface(FontsUtils.getRalewayRegular(getContext()));
 
+
+
         nameView.setText(nameText);
         infoView.setText(infoText);
         degreeView.setText(degreeText +" °C");
         imageView.setImageDrawable(plantImage);
+
+
+
+
         planteBg.setOnClickListener(new OnClickListener() {
             @SuppressLint("NewApi")
             @Override
@@ -175,6 +182,11 @@ public class PlantView extends FrameLayout {
                 parent.removeView(PlantView.this);
             }
         });
+
+        LayoutTransition transition = new LayoutTransition();
+        transition.enableTransitionType(LayoutTransition.CHANGING);
+        transition.setDuration(300);
+        this.setLayoutTransition(transition);
 
 
     }

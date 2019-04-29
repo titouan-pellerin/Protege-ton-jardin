@@ -42,7 +42,6 @@ dependencies {
     implementation 'com.android.support:recyclerview-v7:28.0.0'
     implementation 'com.android.support:support-v4:28.+'
     implementation "com.daimajia.swipelayout:library:1.2.0@aar"
-    implementation 'com.github.zurche:open-weather-map-android-wrapper:v0.1'
     implementation 'com.visuality.f32forandroid:f32:2.4'
 }
 

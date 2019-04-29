@@ -1,5 +1,6 @@
 package fr.visufo.titouan.jardin;
 
+import android.animation.LayoutTransition;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
@@ -16,12 +17,14 @@ import android.os.Bundle;
 import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Switch;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -54,6 +57,9 @@ public class MainActivity extends AppCompatActivity {
 
     LinearLayout plantsView;
     Button firstPlantButton;
+    TextView tempText;
+    LinearLayout mainLinearLayout;
+
     //Variables
     Bitmap selectedImage;
     String plantName;
@@ -62,7 +68,7 @@ public class MainActivity extends AppCompatActivity {
     static final int RESULT_LOAD_IMG = 1;
     private static final int ERROR_DIALOG_REQUEST = 9001;
 
-    double temp;
+    static double temp = 0.0;
 
     //Actions au lancement de l'application
     @Override
@@ -78,6 +84,32 @@ public class MainActivity extends AppCompatActivity {
 
         linearLayout.invalidate();
         refreshView(linearLayout);
+
+        String data = readFromFile(getApplicationContext(),"Localisation.latLng");
+        String[] latLgn;
+        latLgn = data.split(";");
+        if(!(data.isEmpty())) {
+            Log.v("Latitude", latLgn[0]);
+            Log.v("Longitude", latLgn[1]);
+            double latitude = Double.parseDouble(latLgn[0]);
+            double longitude = Double.parseDouble(latLgn[1]);
+
+            WeatherClass.getTemp(latitude,longitude, new IResult() {
+                @Override
+                public void onResult(double temp) {
+                    MainActivity.temp = temp;
+                }
+            });
+
+            showToast(temp +"");
+            Log.v("Load", temp +"");
+
+
+        }else{
+            temp = 100000;
+        }
+
+
     }
 
 
@@ -176,33 +208,37 @@ public class MainActivity extends AppCompatActivity {
 
         String[] latLgn;
         latLgn = data.split(";");
-        double tempAdd;
         if(!(data.isEmpty())){
             Log.v("Latitude", latLgn[0]);
             Log.v("Longitude", latLgn[1]);
             double latitude = Double.parseDouble(latLgn[0]);
             double longitude = Double.parseDouble(latLgn[1]);
-            tempAdd = WeatherClass.getTemp(latitude,longitude,getApplicationContext());
-            showToast(tempAdd+"");
-            Log.v("Add", tempAdd+"");
+            WeatherClass.getTemp(latitude, longitude, new IResult() {
+                @Override
+                public void onResult(double temp) {
+                    MainActivity.temp = temp;
+                }
+            });
+            showToast(temp +"");
+            Log.v("Add", temp +"");
 
         }else{
-            tempAdd = 100000;
+            temp = 100000;
         }
         if(isNetworkAvailable()) {
-            if(tempAdd == 100000){
+            if(temp == 100000){
                 plantView.setName(plantName);
                 plantView.setDegree(degree);
                 plantView.setInfo("Vous n'avez pas encore indiqué de localisation");
                 contentMain.invalidate();
                 contentMain.requestLayout();
-            }else if(tempAdd == -1000000){
+            }else if(temp == -1000000){
                 plantView.setName(plantName);
                 plantView.setDegree(degree);
                 plantView.setInfo("Problème lié au chargement de la météo");
                 contentMain.invalidate();
                 contentMain.requestLayout();
-            }else if (tempAdd < Double.parseDouble(degree)) {
+            }else if (temp < Double.parseDouble(degree)) {
                 plantView.setName(plantName);
                 plantView.setDegree(degree);
                 plantView.setInfo("Température inférieure au degré de gel");
@@ -210,7 +246,7 @@ public class MainActivity extends AppCompatActivity {
                 contentMain.invalidate();
                 contentMain.requestLayout();
 
-            }else if (tempAdd > Double.parseDouble(degree)) {
+            }else if (temp > Double.parseDouble(degree)) {
                 plantView.setName(plantName);
                 plantView.setDegree(degree);
                 plantView.setInfo("Pas de problème pour cette plante");
@@ -234,6 +270,8 @@ public class MainActivity extends AppCompatActivity {
 
         //Et finalement on ajoute la "PlantView" que l'on vient de définir à la vue principale
         contentMain.addView(plantView);
+        showNextDayTemp();
+
 
     }
 
@@ -249,19 +287,25 @@ public class MainActivity extends AppCompatActivity {
 
             String[] latLgn;
             latLgn = data.split(";");
-            double tempLoad;
             if(!(data.isEmpty())) {
                 Log.v("Latitude", latLgn[0]);
                 Log.v("Longitude", latLgn[1]);
                 double latitude = Double.parseDouble(latLgn[0]);
                 double longitude = Double.parseDouble(latLgn[1]);
-                tempLoad = WeatherClass.getTemp(latitude,longitude,this);
-                showToast(tempLoad+"");
-                Log.v("Load", tempLoad+"");
+
+                WeatherClass.getTemp(latitude,longitude, new IResult() {
+                    @Override
+                    public void onResult(double temp) {
+                        MainActivity.temp = temp;
+                    }
+                });
+
+                showToast(temp +"");
+                Log.v("Load", temp +"");
 
 
             }else{
-                tempLoad = 100000;
+                temp = 100000;
             }
             //LayoutInflater inflater = LayoutInflater.from(getApplicationContext());
             //Boucle pour afficher chaque plante sur la vue principale, en fonction du nombre de fichiers, donc du nombre de plantes enregistrées
@@ -284,7 +328,7 @@ public class MainActivity extends AppCompatActivity {
                 boolean isMovable = Boolean.valueOf(plantAttributs[2]);
 
                 //Création d'une nouvelle plante, en créant une variable de type "Plant"
-                Plant plant = new Plant(getApplicationContext(), plantName, degree, isMovable);
+                //Plant plant = new Plant(getApplicationContext(), plantName, degree, isMovable);
 
                 //On récupère l'id de la vue principale
                 LinearLayout contentMain = findViewById(R.id.mainLinearLayout);
@@ -296,20 +340,20 @@ public class MainActivity extends AppCompatActivity {
                 //Création d'une nouvelle vue de type "PlantView"
 
                 if (isNetworkAvailable()) {
-                    if (tempLoad == 100000) {
+                    if (temp == 100000) {
                         plantView.setName(plantName);
                         plantView.setDegree(degree);
                         plantView.setInfo("Vous n'avez pas encore indiqué de localisation");
                         contentMain.invalidate();
                         refreshView(contentMain);
-                    } else if (tempLoad == -1000000) {
+                    } else if (temp == -1000000) {
                         plantView.setName(plantName);
                         plantView.setDegree(degree);
                         plantView.setInfo("Problème lié au chargement de la météo");
                         contentMain.invalidate();
                         refreshView(contentMain);
 
-                    } else if (tempLoad == 0.0) {
+                    } else if (temp == 0.0) {
                         /*finish();
                         startActivity(this.getIntent());*/
                         plantView.setName(plantName);
@@ -317,7 +361,7 @@ public class MainActivity extends AppCompatActivity {
                         plantView.setInfo("Problème lié au chargement de la météo");
                         contentMain.invalidate();
                         refreshView(contentMain);
-                    } else if (tempLoad < Double.parseDouble(degree)) {
+                    } else if (temp < Double.parseDouble(degree)) {
                         plantView.setName(plantName);
                         plantView.setDegree(degree);
                         plantView.setInfo("Température inférieure au degré de gel");
@@ -325,7 +369,7 @@ public class MainActivity extends AppCompatActivity {
                         contentMain.invalidate();
                         refreshView(contentMain);
 
-                    } else if (tempLoad > Double.parseDouble(degree)) {
+                    } else if (temp > Double.parseDouble(degree)) {
                         plantView.setName(plantName);
                         plantView.setDegree(degree);
                         plantView.setInfo("Pas de problème pour cette plante");
@@ -382,6 +426,8 @@ public class MainActivity extends AppCompatActivity {
 
 
         }
+        showNextDayTemp();
+
     }
 
     public void showAddPlantDialog(){
@@ -450,7 +496,17 @@ public class MainActivity extends AppCompatActivity {
                     showToast("Indiquer un nom de plante");
                     //Sinon si il n'y a pas d'image de sélectionnée, on en informe l'utilisateur
                 }else if(selectedImage==null){
-                    showToast("Vous n'avez pas ajouté de photo");
+                    Bitmap plantImg = BitmapFactory.decodeResource(getApplicationContext().getResources(), R.drawable.plant_img_type);
+                    selectedImage = plantImg;
+                    if(switchState) {
+                        addPlantView(getApplicationContext(), plantName, degree,true);
+                        //On ferme la fenêtre de dialogue
+                        addPlantDialog.dismiss();
+                        //Sinon, donc si elle ne l'est pas
+                    }else{
+                        addPlantView(getApplicationContext(), plantName, degree,false);
+                        addPlantDialog.dismiss();
+                    }
 
                     //Et finalement si toutes les conditions sont remplies, on ajoute les plantes à la vue principale.
                 }else{
@@ -637,5 +693,31 @@ public class MainActivity extends AppCompatActivity {
         view.setVisibility(View.VISIBLE);
     }
 
+    public void showNextDayTemp(){
+        mainLinearLayout = findViewById(R.id.mainLinearLayout);
+        if(tempText == null) {
+            LayoutTransition transition = new LayoutTransition();
+            transition.enableTransitionType(LayoutTransition.CHANGING);
+            transition.setDuration(300);
+            mainLinearLayout.setLayoutTransition(transition);
 
+
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            params.setMargins(10, 10, 10, 10);
+            params.gravity = Gravity.CENTER;
+
+            tempText = new TextView(getApplicationContext());
+            tempText.setText("Température minimale prévue: " + (Math.round(temp*10.0)/10.0) + "°C");
+            tempText.setTextSize(9);
+            tempText.setLayoutParams(params);
+            tempText.setTypeface(FontsUtils.getRalewayLight(getApplicationContext()));
+            tempText.setTextColor(Color.parseColor("#FFFFFF"));
+
+            mainLinearLayout.addView(tempText);
+        }else{
+            mainLinearLayout.removeView(tempText);
+            tempText = null;
+            showNextDayTemp();
+        }
+    }
 }
