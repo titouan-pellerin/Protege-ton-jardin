@@ -8,6 +8,7 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
@@ -129,7 +130,7 @@ public class PlantView extends FrameLayout {
         params.height = 110;
         params.width = ViewGroup.LayoutParams.WRAP_CONTENT;
         params.bottomMargin = 15;
-        params.gravity = Gravity.LEFT|CENTER;
+        params.gravity = Gravity.START|CENTER;
 
 
         btnContainer.setLayoutParams(params);
@@ -166,7 +167,7 @@ public class PlantView extends FrameLayout {
                     isExtended = false;
 
 
-                }else if(isExtended == false) {
+                }else if(!isExtended) {
                     textsView.addView(btnContainer);
                     btnContainer.addView(removeButton);
                     isExtended = true;
@@ -184,7 +185,9 @@ public class PlantView extends FrameLayout {
         });
 
         LayoutTransition transition = new LayoutTransition();
-        transition.enableTransitionType(LayoutTransition.CHANGING);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+            transition.enableTransitionType(LayoutTransition.CHANGING);
+        }
         transition.setDuration(300);
         this.setLayoutTransition(transition);
 

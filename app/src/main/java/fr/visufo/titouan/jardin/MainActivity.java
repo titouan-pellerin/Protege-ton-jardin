@@ -13,6 +13,7 @@ import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -98,11 +99,14 @@ public class MainActivity extends AppCompatActivity {
                 @Override
                 public void onResult(double temp) {
                     MainActivity.temp = temp;
+
+                    showNextDayTemp(temp);
+                    showToast(temp +"");
+                    Log.v("Load", temp +"");
                 }
             });
 
-            showToast(temp +"");
-            Log.v("Load", temp +"");
+
 
 
         }else{
@@ -203,10 +207,10 @@ public class MainActivity extends AppCompatActivity {
         //On récupère l'id de la vue principale, dans laquelle on va afficher les plantes
         LinearLayout contentMain = findViewById(R.id.mainLinearLayout);
 
-        String data = readFromFile(getApplicationContext(),"Localisation.latLng");
+        //String data = readFromFile(getApplicationContext(),"Localisation.latLng");
         PlantView plantView = new PlantView(context, null);
 
-        String[] latLgn;
+        /*String[] latLgn;
         latLgn = data.split(";");
         if(!(data.isEmpty())){
             Log.v("Latitude", latLgn[0]);
@@ -224,7 +228,7 @@ public class MainActivity extends AppCompatActivity {
 
         }else{
             temp = 100000;
-        }
+        }*/
         if(isNetworkAvailable()) {
             if(temp == 100000){
                 plantView.setName(plantName);
@@ -270,7 +274,7 @@ public class MainActivity extends AppCompatActivity {
 
         //Et finalement on ajoute la "PlantView" que l'on vient de définir à la vue principale
         contentMain.addView(plantView);
-        showNextDayTemp();
+        showNextDayTemp(temp);
 
 
     }
@@ -282,7 +286,7 @@ public class MainActivity extends AppCompatActivity {
         //Si le tableau n'est pas vide
         if (files.length != 0) {
 
-            String data = readFromFile(getApplicationContext(), "Localisation.latLng");
+            /*String data = readFromFile(getApplicationContext(), "Localisation.latLng");
 
 
             String[] latLgn;
@@ -306,7 +310,7 @@ public class MainActivity extends AppCompatActivity {
 
             }else{
                 temp = 100000;
-            }
+            }*/
             //LayoutInflater inflater = LayoutInflater.from(getApplicationContext());
             //Boucle pour afficher chaque plante sur la vue principale, en fonction du nombre de fichiers, donc du nombre de plantes enregistrées
             for (File file : files) {
@@ -426,7 +430,7 @@ public class MainActivity extends AppCompatActivity {
 
 
         }
-        showNextDayTemp();
+        showNextDayTemp(temp);
 
     }
 
@@ -438,10 +442,10 @@ public class MainActivity extends AppCompatActivity {
         addPlantDialog.show();
 
         //On récupère l'id du bouton "Valider" de la fenêtre de dialogue que l'on vient de créer
-        addPlantDoneButton = (Button) addPlantDialog.findViewById(R.id.done_button_addPlant);
+        addPlantDoneButton = addPlantDialog.findViewById(R.id.done_button_addPlant);
 
         //On récupère l'id du bouton "Ajouter une image" de la fenêtre de dialogue que l'on vient de créer
-        addImageButton = (Button) addPlantDialog.findViewById(R.id.addImage);
+        addImageButton = addPlantDialog.findViewById(R.id.addImage);
 
         //Lecture des actions appliquées au bouton "Ajouter une image"
         addImageButton.setOnClickListener(new View.OnClickListener() {
@@ -466,16 +470,16 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
 
                 //On récupère l'id du champ de texte correspondant au nom de la plante
-                plantEdit = (EditText) addPlantDialog.findViewById(R.id.plant_name);
+                plantEdit = addPlantDialog.findViewById(R.id.plant_name);
 
                 //On récupère l'id du champ de texte correspondant au degré de la plante
-                degreeEdit = (EditText) addPlantDialog.findViewById(R.id.degree_nbr);
+                degreeEdit = addPlantDialog.findViewById(R.id.degree_nbr);
 
                 //On récupère l'id de "l'interrupteur" indiquant si la plante est déplaçable ou non
-                aSwitch = (Switch) addPlantDialog.findViewById(R.id.moveable_plant);
+                aSwitch = addPlantDialog.findViewById(R.id.moveable_plant);
 
                 //Définition d'un boolean récupérant l'état de l'interrupteur
-                Boolean switchState = aSwitch.isChecked();
+                boolean switchState = aSwitch.isChecked();
 
                 //On récupère le texte entré dans le premier champ dans une variable de type String
                 plantName = plantEdit.getText().toString().trim();
@@ -496,8 +500,7 @@ public class MainActivity extends AppCompatActivity {
                     showToast("Indiquer un nom de plante");
                     //Sinon si il n'y a pas d'image de sélectionnée, on en informe l'utilisateur
                 }else if(selectedImage==null){
-                    Bitmap plantImg = BitmapFactory.decodeResource(getApplicationContext().getResources(), R.drawable.plant_img_type);
-                    selectedImage = plantImg;
+                    selectedImage = BitmapFactory.decodeResource(getApplicationContext().getResources(), R.drawable.plant_img_type);
                     if(switchState) {
                         addPlantView(getApplicationContext(), plantName, degree,true);
                         //On ferme la fenêtre de dialogue
@@ -693,11 +696,13 @@ public class MainActivity extends AppCompatActivity {
         view.setVisibility(View.VISIBLE);
     }
 
-    public void showNextDayTemp(){
+    public void showNextDayTemp(double temp){
         mainLinearLayout = findViewById(R.id.mainLinearLayout);
         if(tempText == null) {
             LayoutTransition transition = new LayoutTransition();
-            transition.enableTransitionType(LayoutTransition.CHANGING);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                transition.enableTransitionType(LayoutTransition.CHANGING);
+            }
             transition.setDuration(300);
             mainLinearLayout.setLayoutTransition(transition);
 
@@ -717,7 +722,9 @@ public class MainActivity extends AppCompatActivity {
         }else{
             mainLinearLayout.removeView(tempText);
             tempText = null;
-            showNextDayTemp();
+            showNextDayTemp(temp);
         }
     }
+
+
 }

@@ -19,7 +19,6 @@
         android:background="@drawable/ripple_bg_shape">
 
         <de.hdodenhof.circleimageview.CircleImageView
-            xmlns:app="http://schemas.android.com/apk/res-auto"
             android:id="@+id/image"
             android:layout_width="55dp"
             android:layout_height="55dp"
@@ -34,17 +33,18 @@
             android:layout_marginLeft="8dp"
             android:layout_marginTop="5dp"
             android:animateLayoutChanges="true"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:layout_marginStart="8dp">
 
             <fr.visufo.titouan.jardin.UnderlinedTextView
                 android:id="@+id/nomPlante"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
-                android:gravity="left"
+                android:gravity="start"
                 android:text="Cactus"
                 android:textSize="23sp"
-                android:fontFamily="@font/raleway_semibold"
+                app:fontFamily="@font/raleway_semibold"
                 android:textColor="#1E1E1E"
                 app:underlineColor="#6DB85C"
                 app:underlineWidth="10px"/>
@@ -56,7 +56,7 @@
                 android:layout_marginEnd="5dp"
                 android:layout_marginRight="5dp"
                 android:text="Pas de problème pour cette plante"
-                android:fontFamily="@font/raleway_regular"/>
+                app:fontFamily="@font/raleway_regular"/>
 
 
 
@@ -79,7 +79,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:gravity="center"
-                android:fontFamily="@font/roboto_regular"
+                app:fontFamily="@font/roboto_regular"
                 android:text="-10°C"
                 android:textSize="16sp"
                 android:textColor="#636363"/>

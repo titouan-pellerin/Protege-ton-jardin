@@ -12,12 +12,12 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class WeatherClass {
+class WeatherClass {
 
     private static double temp = 0.0;
 
 
-    public static void getTemp(double latitude, double longitude, final IResult callback){
+    static void getTemp(double latitude, double longitude, final IResult callback){
         String OPEN_WEATHER_MAP_API = "97e202a04a512514be6c36668fb2a5e3";
         new WeatherManager(OPEN_WEATHER_MAP_API)
                 .getFiveDayForecastByCoordinates(latitude,longitude,
@@ -33,14 +33,14 @@ public class WeatherClass {
                                     Temperature tempMini = weatherForTimestamp.getTemperature().getMinimum();
                                     double temperatureInCelcius = tempMini.getValue(TemperatureUnit.CELCIUS);
                                     list.add(temperatureInCelcius);
-                                    Log.v("Weather", "" +weatherForTimestamp.getWind().getSpeed());
-                                    Log.v("Weather", "Température mini : " +  " "+ list.get(i));
+                                   // Log.v("Weather", "" +weatherForTimestamp.getWind().getSpeed());
+                                    //Log.v("Weather", "Température mini : " +  " "+ list.get(i));
                                 }
                                 int  minIndex = list.indexOf(Collections.min(list));
-                                Log.v("Weather MINI", "Température mini : " + list.get(minIndex));
+                                //Log.v("Weather MINI", "Température mini : " + list.get(minIndex));
                                 //Toast.makeText(context, "Température mini: " + list.get(minIndex), Toast.LENGTH_LONG).show();
                                 temp =  list.get(minIndex);
-                                Log.v("WeatherClass", temp + "");
+                               // Log.v("WeatherClass", temp + "");
                                 callback.onResult(temp);
 
 
