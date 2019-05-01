@@ -378,7 +378,7 @@ public class MainActivity extends AppCompatActivity {
                         contentMain.invalidate();
                         refreshView(contentMain);
 
-                    } else if (temp <= Double.parseDouble(degree)+2) {
+                    } else if (temp < Double.parseDouble(degree)+2) {
                         if (isMovable) {
                             plantView.setName(plantName);
                             plantView.setDegree(degree);
@@ -521,7 +521,16 @@ public class MainActivity extends AppCompatActivity {
                     showToast("Indiquer un nom de plante");
                     //Sinon si il n'y a pas d'image de sélectionnée, on en informe l'utilisateur
                 }else if(selectedImage==null){
-                    selectedImage = BitmapFactory.decodeResource(getApplicationContext().getResources(), R.drawable.plant_img_type);
+                    int alea = Randomizer.generate(1,4);
+                    if(alea==1) {
+                        selectedImage = BitmapFactory.decodeResource(getApplicationContext().getResources(), R.drawable.plant_img_type1);
+                    }else if (alea==2) {
+                        selectedImage = BitmapFactory.decodeResource(getApplicationContext().getResources(), R.drawable.plant_img_type2);
+                    }else if (alea==3) {
+                        selectedImage = BitmapFactory.decodeResource(getApplicationContext().getResources(), R.drawable.plant_img_type3);
+                    }else if (alea==4) {
+                        selectedImage = BitmapFactory.decodeResource(getApplicationContext().getResources(), R.drawable.plant_img_type4);
+                    }
                     if(switchState) {
                         addPlantView(getApplicationContext(), plantName, degree,true);
                         //On ferme la fenêtre de dialogue
@@ -750,6 +759,5 @@ public class MainActivity extends AppCompatActivity {
             showNextDayTemp(temp);
         }
     }
-
 
 }
