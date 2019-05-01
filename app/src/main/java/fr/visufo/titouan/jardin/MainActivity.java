@@ -241,21 +241,21 @@ public class MainActivity extends AppCompatActivity {
                 plantView.setInfo("Problème lié au chargement de la météo");
                 contentMain.invalidate();
                 contentMain.requestLayout();
-            }else if (temp < Double.parseDouble(degree)+2) {
+            }else if (temp <= Double.parseDouble(degree)+2) {
                 if (isMovable) {
                     plantView.setName(plantName);
                     plantView.setDegree(degree);
                     plantView.setInfo("Pensez à rentrer votre plante");
                     plantView.changeBackgroundColor("#ff7961");
                     contentMain.invalidate();
-                    refreshView(contentMain);}
+                    contentMain.requestLayout();}
                 else {
                     plantView.setName(plantName);
                     plantView.setDegree(degree);
                     plantView.setInfo("Pensez à couvrir votre plante");
                     plantView.changeBackgroundColor("#ff7961");
                     contentMain.invalidate();
-                    refreshView(contentMain);}
+                    contentMain.requestLayout();}
 
             }else if (temp > Double.parseDouble(degree)+2) {
                 plantView.setName(plantName);
@@ -374,7 +374,7 @@ public class MainActivity extends AppCompatActivity {
                         contentMain.invalidate();
                         refreshView(contentMain);
 
-                    } else if (temp < Double.parseDouble(degree)+2) {
+                    } else if (temp <= Double.parseDouble(degree)+2) {
                         if (isMovable) {
                             plantView.setName(plantName);
                             plantView.setDegree(degree);
