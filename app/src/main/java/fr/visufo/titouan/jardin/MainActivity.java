@@ -24,6 +24,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -43,6 +44,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
+
 public class MainActivity extends AppCompatActivity {
 
     //Views
@@ -60,6 +62,7 @@ public class MainActivity extends AppCompatActivity {
     Button firstPlantButton;
     TextView tempText;
     LinearLayout mainLinearLayout;
+    ScrollView scrollView;
 
     //Variables
     Bitmap selectedImage;
@@ -81,6 +84,8 @@ public class MainActivity extends AppCompatActivity {
         addFab();
         //Charge les plantes enregistrées au démarrage de l'application
         LinearLayout linearLayout = findViewById(R.id.mainLinearLayout);
+
+
 
         linearLayout.invalidate();
         refreshView(linearLayout);
@@ -104,6 +109,9 @@ public class MainActivity extends AppCompatActivity {
                         showNextDayTemp(temp);
                         //showToast(temp +"");
                         Log.v("Load", temp +"");
+
+
+
                     }
                 },getApplicationContext());
             }else{
@@ -113,12 +121,13 @@ public class MainActivity extends AppCompatActivity {
             MainActivity.temp = 100000;
             loadPlants(100000);
             showNextDayTemp(100000);
+
         }
 
-        //YO BG BG BGB GB GBGBGB
-        Log.v("T", "T");
-
-
+        String caller = getIntent().getStringExtra("caller");
+        if(caller != null) {
+            showAddPlantDialog();
+        }
     }
 
 

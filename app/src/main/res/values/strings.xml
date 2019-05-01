@@ -3,7 +3,10 @@
     <string name="action_settings">Settings</string>
     <string name="title_activity_maps">Map</string>
     <string name="firstPlantText">Ajouter votre première plante</string>
-    <string name="title_activity_maps2">Map</string>
-
+    <string name="send_email">Send Email</string>
+    <string name="shortcut_short_label">Ajouter une plante</string>
+    <string name="shortcut_long_label">Ajouter une nouvelle plante</string>
+    <string name="shortcut_short_localisation">Localisation</string>
+    <string name="shortcut_long_localisation">Localisation</string>
 
 </resources>
