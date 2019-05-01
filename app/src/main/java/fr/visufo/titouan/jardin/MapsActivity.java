@@ -104,8 +104,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
 
 
-        // Add a marker in Sydney and move the camera
-
+        button = (Button) findViewById(R.id.buttonMaps);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(getApplicationContext(),"Vous devez indiquer un lieu", Toast.LENGTH_SHORT).show();
+            }
+        });
         mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
             @Override
             public void onMapClick(final LatLng point) {

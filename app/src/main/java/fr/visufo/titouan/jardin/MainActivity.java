@@ -86,31 +86,35 @@ public class MainActivity extends AppCompatActivity {
         refreshView(linearLayout);
 
         String data = readFromFile(getApplicationContext(),"Localisation.latLng");
-        String[] latLgn;
-        latLgn = data.split(";");
-        if(!(data.isEmpty())) {
-            Log.v("Latitude", latLgn[0]);
-            Log.v("Longitude", latLgn[1]);
-            double latitude = Double.parseDouble(latLgn[0]);
-            double longitude = Double.parseDouble(latLgn[1]);
+        if(!(data.isEmpty())){
 
-            WeatherClass.getTemp(latitude,longitude, new IResult() {
-                @Override
-                public void onResult(double temp) {
-                    MainActivity.temp = temp;
-                    loadPlants(temp);
-                    showNextDayTemp(temp);
-                    showToast(temp +"");
-                    Log.v("Load", temp +"");
-                }
-            },getApplicationContext());
+            String[] latLgn;
+            latLgn = data.split(";");
+            if(!(data.isEmpty())) {
+                Log.v("Latitude", latLgn[0]);
+                Log.v("Longitude", latLgn[1]);
+                double latitude = Double.parseDouble(latLgn[0]);
+                double longitude = Double.parseDouble(latLgn[1]);
 
-
-
-
+                WeatherClass.getTemp(latitude,longitude, new IResult() {
+                    @Override
+                    public void onResult(double temp) {
+                        MainActivity.temp = temp;
+                        loadPlants(temp);
+                        showNextDayTemp(temp);
+                        //showToast(temp +"");
+                        Log.v("Load", temp +"");
+                    }
+                },getApplicationContext());
+            }else{
+                temp = 100000;
+            }
         }else{
-            temp = 100000;
+            MainActivity.temp = 100000;
+            loadPlants(100000);
+            showNextDayTemp(100000);
         }
+
 
 
     }
@@ -656,8 +660,6 @@ public class MainActivity extends AppCompatActivity {
     return Bitmap.createScaledBitmap(bitmap,width, height, false);
     }
 
-
-
     public File[] listTxt(){
 
         File[] files;
@@ -729,7 +731,13 @@ public class MainActivity extends AppCompatActivity {
             params.gravity = Gravity.CENTER;
 
             tempText = new TextView(getApplicationContext());
-            tempText.setText("Température minimale prévue: " + (Math.round(temp*10.0)/10.0) + "°C");
+            if(temp == 100000) {
+                tempText.setText("Veuillez indiquer une localisation");
+            }else if(temp == -100000){
+                tempText.setText("Problème lors du chargement de la météo");
+            }else{
+                tempText.setText("Température minimale prévue: " + (Math.round(temp*10.0)/10.0) + "°C");
+            }
             tempText.setTextSize(9);
             tempText.setLayoutParams(params);
             tempText.setTypeface(FontsUtils.getRalewayLight(getApplicationContext()));

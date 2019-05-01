@@ -1,55 +1,61 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".MapsActivity"
-    android:orientation="vertical"
-    android:background="@color/colorPrimaryDark"
-    android:weightSum="1">
+    tools:context=".MapsActivity" >
+
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:orientation="vertical"
-        android:layout_weight=".8">
-        <fragment
+        android:layout_height="match_parent">
+
+
+       <fragment
             android:id="@+id/map"
             class="com.google.android.gms.maps.SupportMapFragment"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:scrollbars="vertical">
+
+            <LinearLayout
+                android:layout_gravity="center|bottom"
+                android:gravity="center"
+                android:alpha="0.9"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:weightSum="1"
+                android:orientation="horizontal"
+                android:background="@drawable/localisation_bg">
+
+                <TextView
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="40dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.7"
+                    android:textSize="15sp"
+                    android:text="Où se situe votre jardin ?"
+                    android:textColor="#FFFFFF"/>
+
+                <Button
+                    android:layout_gravity="center"
+                    android:id="@+id/buttonMaps"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+
+                    android:background="@drawable/ic_done" />
+
+            </LinearLayout>
+
+
+
+
+        </fragment>
+
+
     </LinearLayout>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:orientation="vertical"
-        android:layout_weight=".2"
-        android:background="@drawable/localisation_bg"
-        android:layout_margin="5dp"
-        android:gravity="center">
 
-        <TextView
-            android:layout_width="260dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="3dp"
-            android:layout_marginEnd="5dp"
-            android:layout_marginRight="5dp"
-            android:textAlignment="center"
-            android:textSize="17sp"
-            android:text="Sélectionnez l'endroit ou se situe votre jardin et validez"
-            app:fontFamily="@font/raleway_regular"
-            android:layout_gravity="center"/>
-
-        <Button
-            android:id="@+id/buttonMaps"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:background="@drawable/ic_done"
-            android:layout_gravity="center"
-            android:layout_marginTop="5dp"/>
-
-        </LinearLayout>
-
-
-</LinearLayout>
+</FrameLayout>
