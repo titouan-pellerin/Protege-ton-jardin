@@ -521,7 +521,7 @@ public class MainActivity extends AppCompatActivity {
                     showToast("Indiquer un nom de plante");
                     //Sinon si il n'y a pas d'image de sélectionnée, on en informe l'utilisateur
                 }else if(selectedImage==null){
-                    int alea = Randomizer.generate(1,4);
+                    int alea = Randomizer.generate(1,10);
                     if(alea==1) {
                         selectedImage = BitmapFactory.decodeResource(getApplicationContext().getResources(), R.drawable.plant_img_type1);
                     }else if (alea==2) {
@@ -530,6 +530,18 @@ public class MainActivity extends AppCompatActivity {
                         selectedImage = BitmapFactory.decodeResource(getApplicationContext().getResources(), R.drawable.plant_img_type3);
                     }else if (alea==4) {
                         selectedImage = BitmapFactory.decodeResource(getApplicationContext().getResources(), R.drawable.plant_img_type4);
+                    }else if (alea==5) {
+                        selectedImage = BitmapFactory.decodeResource(getApplicationContext().getResources(), R.drawable.plant_img_type5);
+                    }else if (alea==6) {
+                        selectedImage = BitmapFactory.decodeResource(getApplicationContext().getResources(), R.drawable.plant_img_type6);
+                    }else if (alea==7) {
+                        selectedImage = BitmapFactory.decodeResource(getApplicationContext().getResources(), R.drawable.plant_img_type7);
+                    }else if (alea==8) {
+                        selectedImage = BitmapFactory.decodeResource(getApplicationContext().getResources(), R.drawable.plant_img_type8);
+                    }else if (alea==9) {
+                        selectedImage = BitmapFactory.decodeResource(getApplicationContext().getResources(), R.drawable.plant_img_type9);
+                    }else if (alea==10) {
+                        selectedImage = BitmapFactory.decodeResource(getApplicationContext().getResources(), R.drawable.plant_img_type10);
                     }
                     if(switchState) {
                         addPlantView(getApplicationContext(), plantName, degree,true);
