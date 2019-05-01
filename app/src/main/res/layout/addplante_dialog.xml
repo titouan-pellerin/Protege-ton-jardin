@@ -122,8 +122,7 @@
                     android:layout_gravity="center"
                     android:layout_marginTop="-5dp"
                     android:layout_marginHorizontal="10dp"
-                    android:background="@drawable/ic_done_ripple"
-                    android:onClick="onClick" />
+                    android:background="@drawable/ic_done_ripple"/>
             </LinearLayout>
 
         </LinearLayout>
