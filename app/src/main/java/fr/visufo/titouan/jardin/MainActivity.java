@@ -249,14 +249,14 @@ public class MainActivity extends AppCompatActivity {
                     plantView.setInfo("Pensez à rentrer votre plante");
                     plantView.changeBackgroundColor("#ff7961");
                     contentMain.invalidate();
-                    refreshView(contentMain);}
+                    contentMain.requestLayout();}
                 else {
                     plantView.setName(plantName);
                     plantView.setDegree(degree);
                     plantView.setInfo("Pensez à couvrir votre plante");
                     plantView.changeBackgroundColor("#ff7961");
                     contentMain.invalidate();
-                    refreshView(contentMain);}
+                    contentMain.requestLayout();}
 
             }else if (temp > Double.parseDouble(degree)+2) {
                 plantView.setName(plantName);
