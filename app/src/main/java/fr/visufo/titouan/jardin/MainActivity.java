@@ -117,6 +117,7 @@ public class MainActivity extends AppCompatActivity {
 
 
 
+
     }
 
 
@@ -780,6 +781,7 @@ public class MainActivity extends AppCompatActivity {
             }else{
                 tempText.setText("Température minimale prévue: " + (Math.round(temp*10.0)/10.0) + "°C");
             }
+
             tempText.setTextSize(9);
             tempText.setLayoutParams(params);
             tempText.setTypeface(FontsUtils.getRalewayLight(getApplicationContext()));
