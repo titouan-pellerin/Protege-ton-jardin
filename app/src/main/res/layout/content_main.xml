@@ -7,7 +7,7 @@
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context=".MainActivity"
     tools:showIn="@layout/activity_main"
-    android:id="@+id/scrollMain1111">
+    android:id="@+id/scrollMain">
 
     <LinearLayout
         android:id="@+id/mainLinearLayout"

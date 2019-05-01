@@ -117,6 +117,7 @@ public class MainActivity extends AppCompatActivity {
 
 
 
+
     }
 
 
@@ -775,7 +776,6 @@ public class MainActivity extends AppCompatActivity {
             mainLinearLayout.setLayoutTransition(transition);
 
 
-
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
             params.setMargins(10, 10, 10, 10);
             params.gravity = Gravity.CENTER;
@@ -788,6 +788,7 @@ public class MainActivity extends AppCompatActivity {
             }else{
                 tempText.setText("Température minimale prévue: " + (Math.round(temp*10.0)/10.0) + "°C");
             }
+
             tempText.setTextSize(9);
             tempText.setLayoutParams(params);
             tempText.setTypeface(FontsUtils.getRalewayLight(getApplicationContext()));
