@@ -80,7 +80,6 @@ public class MainActivity extends AppCompatActivity {
         //Créer le bouton flotant (Floating Action Button)
         addFab();
         //Charge les plantes enregistrées au démarrage de l'application
-        loadPlants();
         LinearLayout linearLayout = findViewById(R.id.mainLinearLayout);
 
         linearLayout.invalidate();
@@ -99,12 +98,12 @@ public class MainActivity extends AppCompatActivity {
                 @Override
                 public void onResult(double temp) {
                     MainActivity.temp = temp;
-
+                    loadPlants(temp);
                     showNextDayTemp(temp);
                     showToast(temp +"");
                     Log.v("Load", temp +"");
                 }
-            });
+            },getApplicationContext());
 
 
 
@@ -288,7 +287,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     //Fonction utilisée pour charger les plantes au démarrage de l'application
-    public void loadPlants() {
+    public void loadPlants(double temp) {
         Log.v("LOAD PLANT", "Chargement des plantes");
         File[] files = listTxt();
         //Si le tableau n'est pas vide

@@ -1,6 +1,8 @@
 package fr.visufo.titouan.jardin;
 
+import android.content.Context;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.visuality.f32.temperature.Temperature;
 import com.visuality.f32.temperature.TemperatureUnit;
@@ -17,7 +19,8 @@ class WeatherClass {
     private static double temp = 0.0;
 
 
-    static void getTemp(double latitude, double longitude, final IResult callback){
+    static void getTemp(double latitude, double longitude, final IResult callback, Context context){
+        Toast.makeText(context,"Chargement des plantes", Toast.LENGTH_SHORT).show();
         String OPEN_WEATHER_MAP_API = "97e202a04a512514be6c36668fb2a5e3";
         new WeatherManager(OPEN_WEATHER_MAP_API)
                 .getFiveDayForecastByCoordinates(latitude,longitude,
