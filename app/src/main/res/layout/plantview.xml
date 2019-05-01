@@ -28,7 +28,7 @@
             android:layout_gravity="center"/>
         <LinearLayout
             android:id="@+id/textes"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="8dp"
             android:layout_marginTop="5dp"
@@ -36,18 +36,47 @@
             android:orientation="vertical"
             android:layout_marginStart="8dp">
 
-            <fr.visufo.titouan.jardin.UnderlinedTextView
-                android:id="@+id/nomPlante"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:gravity="start"
-                android:text="Cactus"
-                android:textSize="23sp"
-                app:fontFamily="@font/raleway_semibold"
-                android:textColor="#1E1E1E"
-                app:underlineColor="#6DB85C"
-                app:underlineWidth="10px"/>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+                <fr.visufo.titouan.jardin.UnderlinedTextView
+                    android:id="@+id/nomPlante"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:gravity="start"
+                    android:text="Cactus"
+                    android:textSize="23sp"
+                    app:fontFamily="@font/raleway_semibold"
+                    android:textColor="#1E1E1E"
+                    app:underlineColor="#6DB85C"
+                    app:underlineWidth="10px"
+                    android:layout_weight="1"/>
+
+                <LinearLayout
+                    android:layout_weight="0"
+                    android:id="@+id/degree1"
+                    android:layout_width="50dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="5dp"
+                    android:layout_marginEnd="5dp"
+                    android:layout_marginTop="0dp"
+                    android:background="@drawable/degrees_shape"
+                    android:gravity="right">
+
+                    <TextView
+                        android:id="@+id/degree"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:gravity="center"
+                        app:fontFamily="@font/roboto_regular"
+                        android:text="-10°C"
+                        android:textSize="16sp"
+                        android:textColor="#636363"/>
+                </LinearLayout>
+            </LinearLayout>
+
             <TextView
                 android:id="@+id/info"
                 android:layout_width="260dp"
@@ -63,28 +92,7 @@
 
 
         </LinearLayout>
-        <LinearLayout
-            android:id="@+id/degree1"
-            android:layout_width="50dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="-42dp"
-            android:layout_marginLeft="-42dp"
-            android:layout_marginTop="5dp"
-            android:layout_marginEnd="0dp"
-            android:layout_marginRight="0dp"
-            android:background="@drawable/degrees_shape"
-            android:gravity="center">
 
-            <TextView
-                android:id="@+id/degree"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:gravity="center"
-                app:fontFamily="@font/roboto_regular"
-                android:text="-10°C"
-                android:textSize="16sp"
-                android:textColor="#636363"/>
-        </LinearLayout>
     </LinearLayout>
 
 
