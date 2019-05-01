@@ -242,7 +242,7 @@ public class MainActivity extends AppCompatActivity {
                 plantView.setInfo("Problème lié au chargement de la météo");
                 contentMain.invalidate();
                 contentMain.requestLayout();
-            }else if (temp < Double.parseDouble(degree)+2) {
+            }else if (temp <= Double.parseDouble(degree)+2) {
                 if (isMovable) {
                     plantView.setName(plantName);
                     plantView.setDegree(degree);
@@ -375,7 +375,7 @@ public class MainActivity extends AppCompatActivity {
                         contentMain.invalidate();
                         refreshView(contentMain);
 
-                    } else if (temp < Double.parseDouble(degree)+2) {
+                    } else if (temp <= Double.parseDouble(degree)+2) {
                         if (isMovable) {
                             plantView.setName(plantName);
                             plantView.setDegree(degree);
