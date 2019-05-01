@@ -116,6 +116,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         //YO BG BG BGB GB GBGBGB
+        Log.v("T", "T");
 
 
     }
