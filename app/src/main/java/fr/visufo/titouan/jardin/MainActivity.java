@@ -521,27 +521,55 @@ public class MainActivity extends AppCompatActivity {
                     showToast("Indiquer un nom de plante");
                     //Sinon si il n'y a pas d'image de sélectionnée, on en informe l'utilisateur
                 }else if(selectedImage==null){
-                    int alea = Randomizer.generate(1,10);
-                    if(alea==1) {
-                        selectedImage = BitmapFactory.decodeResource(getApplicationContext().getResources(), R.drawable.plant_img_type1);
-                    }else if (alea==2) {
-                        selectedImage = BitmapFactory.decodeResource(getApplicationContext().getResources(), R.drawable.plant_img_type2);
-                    }else if (alea==3) {
-                        selectedImage = BitmapFactory.decodeResource(getApplicationContext().getResources(), R.drawable.plant_img_type3);
-                    }else if (alea==4) {
-                        selectedImage = BitmapFactory.decodeResource(getApplicationContext().getResources(), R.drawable.plant_img_type4);
-                    }else if (alea==5) {
-                        selectedImage = BitmapFactory.decodeResource(getApplicationContext().getResources(), R.drawable.plant_img_type5);
-                    }else if (alea==6) {
-                        selectedImage = BitmapFactory.decodeResource(getApplicationContext().getResources(), R.drawable.plant_img_type6);
-                    }else if (alea==7) {
-                        selectedImage = BitmapFactory.decodeResource(getApplicationContext().getResources(), R.drawable.plant_img_type7);
-                    }else if (alea==8) {
-                        selectedImage = BitmapFactory.decodeResource(getApplicationContext().getResources(), R.drawable.plant_img_type8);
-                    }else if (alea==9) {
-                        selectedImage = BitmapFactory.decodeResource(getApplicationContext().getResources(), R.drawable.plant_img_type9);
-                    }else if (alea==10) {
-                        selectedImage = BitmapFactory.decodeResource(getApplicationContext().getResources(), R.drawable.plant_img_type10);
+                    boolean bool = true;
+                    while(bool) {
+                        int alea = Randomizer.generate(1, 10);
+                        int i = 0;
+                        Log.v("TEST", alea+"");
+                        if (alea == 1 && i!=1) {
+                            selectedImage = BitmapFactory.decodeResource(getApplicationContext().getResources(), R.drawable.plant_img_type1);
+                            i = 1;
+                            bool = false;
+                        } else if (alea == 2 && i!=2) {
+                            selectedImage = BitmapFactory.decodeResource(getApplicationContext().getResources(), R.drawable.plant_img_type2);
+                            i =2;
+                            bool = false;
+                        } else if (alea == 3 && i!=3) {
+                            selectedImage = BitmapFactory.decodeResource(getApplicationContext().getResources(), R.drawable.plant_img_type3);
+                            i = 3;
+                            bool = false;
+                        } else if (alea == 4 && i!=4) {
+                            selectedImage = BitmapFactory.decodeResource(getApplicationContext().getResources(), R.drawable.plant_img_type4);
+                            i = 4;
+                            bool = false;
+                        } else if (alea == 5 && i!=5) {
+                            selectedImage = BitmapFactory.decodeResource(getApplicationContext().getResources(), R.drawable.plant_img_type5);
+                            i = 5;
+                            bool = false;
+                        } else if (alea == 6 && i!=6) {
+                            selectedImage = BitmapFactory.decodeResource(getApplicationContext().getResources(), R.drawable.plant_img_type6);
+                            i = 6;
+                            bool = false;
+                        } else if (alea == 7 && i!=7) {
+                            selectedImage = BitmapFactory.decodeResource(getApplicationContext().getResources(), R.drawable.plant_img_type7);
+                            i = 7;
+                            bool = false;
+                        } else if (alea == 8 && i!=8) {
+                            selectedImage = BitmapFactory.decodeResource(getApplicationContext().getResources(), R.drawable.plant_img_type8);
+                            i = 8;
+                            bool = false;
+                        } else if (alea == 9 && i!=9) {
+                            selectedImage = BitmapFactory.decodeResource(getApplicationContext().getResources(), R.drawable.plant_img_type9);
+                            i = 9;
+                            bool = false;
+                        } else if (alea == 10 && i!=10) {
+                            selectedImage = BitmapFactory.decodeResource(getApplicationContext().getResources(), R.drawable.plant_img_type10);
+                            i = 10;
+                            bool = false;
+                        } else{
+                            bool = true;
+                        }
+
                     }
                     if(switchState) {
                         addPlantView(getApplicationContext(), plantName, degree,true);
@@ -745,6 +773,7 @@ public class MainActivity extends AppCompatActivity {
             }
             transition.setDuration(300);
             mainLinearLayout.setLayoutTransition(transition);
+
 
 
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
