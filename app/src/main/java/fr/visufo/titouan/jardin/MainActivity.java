@@ -1,7 +1,9 @@
 package fr.visufo.titouan.jardin;
 
 import android.animation.LayoutTransition;
+import android.app.AlarmManager;
 import android.app.Dialog;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -43,6 +45,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.Calendar;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -68,6 +71,9 @@ public class MainActivity extends AppCompatActivity {
     Bitmap selectedImage;
     String plantName;
     String degree;
+
+
+    AlarmManager am;
 
     static final int RESULT_LOAD_IMG = 1;
     private static final int ERROR_DIALOG_REQUEST = 9001;
@@ -128,6 +134,7 @@ public class MainActivity extends AppCompatActivity {
         if(caller != null) {
             showAddPlantDialog();
         }
+
     }
 
 
@@ -524,56 +531,48 @@ public class MainActivity extends AppCompatActivity {
                     showToast("Indiquer un nom de plante");
                     //Sinon si il n'y a pas d'image de sélectionnée, on en informe l'utilisateur
                 }else if(selectedImage==null){
-                    boolean bool = true;
-                    while(bool) {
-                        int alea = Randomizer.generate(1, 10);
-                        int i = 0;
-                        Log.v("TEST", alea+"");
-                        if (alea == 1 && i!=1) {
+                        int alea = Randomizer.generate(1, 20);
+                        if (alea == 1) {
                             selectedImage = BitmapFactory.decodeResource(getApplicationContext().getResources(), R.drawable.plant_img_type1);
-                            i = 1;
-                            bool = false;
-                        } else if (alea == 2 && i!=2) {
+                        } else if (alea == 2) {
                             selectedImage = BitmapFactory.decodeResource(getApplicationContext().getResources(), R.drawable.plant_img_type2);
-                            i =2;
-                            bool = false;
-                        } else if (alea == 3 && i!=3) {
+                        } else if (alea == 3) {
                             selectedImage = BitmapFactory.decodeResource(getApplicationContext().getResources(), R.drawable.plant_img_type3);
-                            i = 3;
-                            bool = false;
-                        } else if (alea == 4 && i!=4) {
+                        } else if (alea == 4) {
                             selectedImage = BitmapFactory.decodeResource(getApplicationContext().getResources(), R.drawable.plant_img_type4);
-                            i = 4;
-                            bool = false;
-                        } else if (alea == 5 && i!=5) {
+                        } else if (alea == 5) {
                             selectedImage = BitmapFactory.decodeResource(getApplicationContext().getResources(), R.drawable.plant_img_type5);
-                            i = 5;
-                            bool = false;
-                        } else if (alea == 6 && i!=6) {
+                        } else if (alea == 6) {
                             selectedImage = BitmapFactory.decodeResource(getApplicationContext().getResources(), R.drawable.plant_img_type6);
-                            i = 6;
-                            bool = false;
-                        } else if (alea == 7 && i!=7) {
+                        } else if (alea == 7) {
                             selectedImage = BitmapFactory.decodeResource(getApplicationContext().getResources(), R.drawable.plant_img_type7);
-                            i = 7;
-                            bool = false;
-                        } else if (alea == 8 && i!=8) {
+                        } else if (alea == 8) {
                             selectedImage = BitmapFactory.decodeResource(getApplicationContext().getResources(), R.drawable.plant_img_type8);
-                            i = 8;
-                            bool = false;
-                        } else if (alea == 9 && i!=9) {
+                        } else if (alea == 9) {
                             selectedImage = BitmapFactory.decodeResource(getApplicationContext().getResources(), R.drawable.plant_img_type9);
-                            i = 9;
-                            bool = false;
-                        } else if (alea == 10 && i!=10) {
+                        } else if (alea == 10) {
                             selectedImage = BitmapFactory.decodeResource(getApplicationContext().getResources(), R.drawable.plant_img_type10);
-                            i = 10;
-                            bool = false;
-                        } else{
-                            bool = true;
+                        } else if (alea == 11) {
+                            selectedImage = BitmapFactory.decodeResource(getApplicationContext().getResources(), R.drawable.plant_img_type11);
+                        } else if (alea == 12) {
+                            selectedImage = BitmapFactory.decodeResource(getApplicationContext().getResources(), R.drawable.plant_img_type12);
+                        } else if (alea == 13) {
+                            selectedImage = BitmapFactory.decodeResource(getApplicationContext().getResources(), R.drawable.plant_img_type13);
+                        } else if (alea == 14) {
+                            selectedImage = BitmapFactory.decodeResource(getApplicationContext().getResources(), R.drawable.plant_img_type14);
+                        } else if (alea == 15) {
+                            selectedImage = BitmapFactory.decodeResource(getApplicationContext().getResources(), R.drawable.plant_img_type15);
+                        } else if (alea == 16) {
+                            selectedImage = BitmapFactory.decodeResource(getApplicationContext().getResources(), R.drawable.plant_img_type16);
+                        } else if (alea == 17) {
+                            selectedImage = BitmapFactory.decodeResource(getApplicationContext().getResources(), R.drawable.plant_img_type17);
+                        } else if (alea == 18) {
+                            selectedImage = BitmapFactory.decodeResource(getApplicationContext().getResources(), R.drawable.plant_img_type18);
+                        } else if (alea == 19) {
+                            selectedImage = BitmapFactory.decodeResource(getApplicationContext().getResources(), R.drawable.plant_img_type19);
+                        } else if (alea == 20) {
+                            selectedImage = BitmapFactory.decodeResource(getApplicationContext().getResources(), R.drawable.plant_img_type20);
                         }
-
-                    }
                     if(switchState) {
                         addPlantView(getApplicationContext(), plantName, degree,true);
                         //On ferme la fenêtre de dialogue
