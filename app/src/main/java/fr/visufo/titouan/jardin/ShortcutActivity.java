@@ -14,6 +14,7 @@ public class ShortcutActivity extends AppCompatActivity {
         Intent intent = new Intent(ShortcutActivity.this, MainActivity.class);
         intent.putExtra("caller", "MainActivity");
         startActivity(intent);
+        finish();
 
     }
 }

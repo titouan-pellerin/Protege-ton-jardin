@@ -1,7 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ripple xmlns:android="http://schemas.android.com/apk/res/android"
-    android:color="?attr/colorControlHighlight">
-    <item>
         <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
 
             <item>
@@ -21,11 +18,11 @@
 
                     <!--If your shape requires only one solid color-->
                     <solid
-                        android:color="#6DB85C" />-->
+                        android:color="#F5F5F5" />-->
 
                     <size
-                        android:width="50dp"
-                        android:height="50dp" />
+                        android:width="48dp"
+                        android:height="48dp" />
                     <!--Use android:dashWidth="2dp" and android:dashGap="2dp"
                     to add dashes to your stroke-->
 
@@ -38,12 +35,10 @@
 
                 </shape>
             </item>
-            <item android:drawable="@drawable/ic_settings"
-                android:height="30dp"
-                android:width="30dp"
+            <item android:drawable="@drawable/ic_settings_green"
+                android:height="24dp"
+                android:width="24dp"
                 android:gravity="center"/>
 
 
         </layer-list>
-    </item>
-</ripple>

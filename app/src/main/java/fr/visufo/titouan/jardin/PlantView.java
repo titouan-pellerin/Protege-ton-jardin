@@ -224,6 +224,13 @@ public class PlantView extends FrameLayout {
         requestLayout();
     }
 
+    public void changeTextColor(String color){
+        infoView.setTextColor(Color.parseColor(color));
+        Log.v("Plant View", "Changing text color");
+        invalidate();
+        requestLayout();
+    }
+
 
     public void showToast(String str){
         Toast.makeText(getContext(), str, Toast.LENGTH_SHORT).show();
