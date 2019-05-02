@@ -1,10 +1,12 @@
-package fr.visufo.titouan.jardin;
+package fr.visufo.titouan.jardin.PlantManagement;
 
 import android.app.Activity;
 import android.app.Dialog;
 import android.os.Bundle;
 import android.view.Window;
 import android.widget.Button;
+
+import fr.visufo.titouan.jardin.R;
 
 public class AddPlantDialogClass extends Dialog{
 

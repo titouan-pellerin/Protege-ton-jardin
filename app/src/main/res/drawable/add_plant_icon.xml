@@ -3,8 +3,8 @@
 
         <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
 
-            <item>
-                <shape xmlns:android="http://schemas.android.com/apk/res/android"
+            <item android:gravity="center">
+                <shape
                     android:shape="rectangle">
 
                     <corners
@@ -29,11 +29,7 @@
                     to add dashes to your stroke-->
 
                     <!--If you want to add padding-->
-                    <padding
-                        android:left="8dp"
-                        android:top="8dp"
-                        android:right="8dp"
-                        android:bottom="8dp" />
+
 
                 </shape>
             </item>

@@ -1,4 +1,4 @@
-package fr.visufo.titouan.jardin;
+package fr.visufo.titouan.jardin.PlantManagement;
 
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -8,6 +8,8 @@ import android.graphics.Rect;
 import android.support.v7.widget.AppCompatTextView;
 import android.text.Layout;
 import android.util.AttributeSet;
+
+import fr.visufo.titouan.jardin.R;
 
 public class UnderlinedTextView extends AppCompatTextView {
 

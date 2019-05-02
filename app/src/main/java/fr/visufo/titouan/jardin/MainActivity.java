@@ -44,6 +44,15 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
+import fr.visufo.titouan.jardin.PlantManagement.AddPlantDialogClass;
+import fr.visufo.titouan.jardin.PlantManagement.Plant;
+import fr.visufo.titouan.jardin.PlantManagement.PlantView;
+import fr.visufo.titouan.jardin.Utils.FontsUtils;
+import fr.visufo.titouan.jardin.Utils.Randomizer;
+import fr.visufo.titouan.jardin.Weather.IResult;
+import fr.visufo.titouan.jardin.Weather.MapsActivity;
+import fr.visufo.titouan.jardin.Weather.WeatherClass;
+
 
 public class MainActivity extends AppCompatActivity {
 
@@ -83,12 +92,6 @@ public class MainActivity extends AppCompatActivity {
         //Créer le bouton flotant (Floating Action Button)
         addFab();
         //Charge les plantes enregistrées au démarrage de l'application
-        LinearLayout linearLayout = findViewById(R.id.mainLinearLayout);
-
-
-
-        linearLayout.invalidate();
-        refreshView(linearLayout);
 
         String data = readFromFile(getApplicationContext(),"Localisation.latLng");
         if(!(data.isEmpty())){
@@ -107,7 +110,6 @@ public class MainActivity extends AppCompatActivity {
                         MainActivity.temp = temp;
                         loadPlants(temp);
                         showNextDayTemp(temp);
-                        //showToast(temp +"");
                         Log.v("Load", temp +"");
 
 
@@ -128,6 +130,17 @@ public class MainActivity extends AppCompatActivity {
         if(caller != null) {
             showAddPlantDialog();
         }
+
+        mainLinearLayout = findViewById(R.id.mainLinearLayout);
+        LayoutTransition transition = new LayoutTransition();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+            transition.enableTransitionType(LayoutTransition.CHANGING);
+        }
+        transition.setDuration(300);
+        mainLinearLayout.setLayoutTransition(transition);
+
+
+
     }
 
 
@@ -178,18 +191,7 @@ public class MainActivity extends AppCompatActivity {
                             startActivity(intent);
 
                         }
-                        /*cityNameEdit = (EditText) settingDialog.findViewById(R.id.cityName);
-                        settingsDoneButton = (Button) settingDialog.findViewById(R.id.done_button_settings);
-                        settingsDoneButton.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                cityName = cityNameEdit.getText().toString().trim();
-                                WeatherClass.setWeatherCity(cityName, getApplicationContext());
-                                settingDialog.dismiss();
-                            }
-                        });*/
 
-                        //Ajouter la lecture des actions du bouton "Valider" de cette fenêtre
 
                         mSpeedDialView.close(); //Fermeture du bouton flottant
                         return true;
@@ -222,73 +224,34 @@ public class MainActivity extends AppCompatActivity {
 
         //String data = readFromFile(getApplicationContext(),"Localisation.latLng");
         PlantView plantView = new PlantView(context, null);
-
-        /*String[] latLgn;
-        latLgn = data.split(";");
-        if(!(data.isEmpty())){
-            Log.v("Latitude", latLgn[0]);
-            Log.v("Longitude", latLgn[1]);
-            double latitude = Double.parseDouble(latLgn[0]);
-            double longitude = Double.parseDouble(latLgn[1]);
-            WeatherClass.getTemp(latitude, longitude, new IResult() {
-                @Override
-                public void onResult(double temp) {
-                    MainActivity.temp = temp;
-                }
-            });
-            showToast(temp +"");
-            Log.v("Add", temp +"");
-        }else{
-            temp = 100000;
-        }*/
+        plantView.setName(plantName);
+        plantView.setDegree(degree);
         if(isNetworkAvailable()) {
             if(temp == 100000){
-                plantView.setName(plantName);
-                plantView.setDegree(degree);
                 plantView.setInfo("Vous n'avez pas encore indiqué de localisation");
-                contentMain.invalidate();
-                contentMain.requestLayout();
             }else if(temp == -1000000){
-                plantView.setName(plantName);
-                plantView.setDegree(degree);
                 plantView.setInfo("Problème lié au chargement de la météo");
-                contentMain.invalidate();
-                contentMain.requestLayout();
             }else if (temp <= Double.parseDouble(degree)+2) {
                 if (isMovable) {
-                    plantView.setName(plantName);
-                    plantView.setDegree(degree);
                     plantView.setInfo("Pensez à rentrer votre plante");
                     plantView.changeBackgroundColor("#ff7961");
                     plantView.changeTextColor("#131313");
-                    contentMain.invalidate();
-                    contentMain.requestLayout();}
+                }
                 else {
-                    plantView.setName(plantName);
-                    plantView.setDegree(degree);
                     plantView.setInfo("Pensez à couvrir votre plante");
                     plantView.changeBackgroundColor("#ff7961");
                     plantView.changeTextColor("#131313");
-                    contentMain.invalidate();
-                    contentMain.requestLayout();}
+                }
 
             }else if (temp > Double.parseDouble(degree)+2) {
-                plantView.setName(plantName);
-                plantView.setDegree(degree);
                 plantView.setInfo("Pas de problème pour cette plante");
-                contentMain.invalidate();
-                contentMain.requestLayout();
+
 
             }else {
-                plantView.setName(plantName);
-                plantView.setDegree(degree);
                 plantView.setInfo("Problème lié au chargement de la météo");
-                contentMain.invalidate();
-                contentMain.requestLayout();
+
             }
         }else if(!isNetworkAvailable()){
-            plantView.setName(plantName);
-            plantView.setDegree(degree);
             plantView.setInfo("Pas d'accès internet");
         }
         //On récupère l'image au nom de la plante depuis le stockage interne et on l'ajoute à la "PlantView" définie juste au-dessus
@@ -307,27 +270,6 @@ public class MainActivity extends AppCompatActivity {
         File[] files = listTxt();
         //Si le tableau n'est pas vide
         if (files.length != 0) {
-
-            /*String data = readFromFile(getApplicationContext(), "Localisation.latLng");
-            String[] latLgn;
-            latLgn = data.split(";");
-            if(!(data.isEmpty())) {
-                Log.v("Latitude", latLgn[0]);
-                Log.v("Longitude", latLgn[1]);
-                double latitude = Double.parseDouble(latLgn[0]);
-                double longitude = Double.parseDouble(latLgn[1]);
-                WeatherClass.getTemp(latitude,longitude, new IResult() {
-                    @Override
-                    public void onResult(double temp) {
-                        MainActivity.temp = temp;
-                    }
-                });
-                showToast(temp +"");
-                Log.v("Load", temp +"");
-            }else{
-                temp = 100000;
-            }*/
-            //LayoutInflater inflater = LayoutInflater.from(getApplicationContext());
             //Boucle pour afficher chaque plante sur la vue principale, en fonction du nombre de fichiers, donc du nombre de plantes enregistrées
             for (File file : files) {
 
@@ -347,9 +289,6 @@ public class MainActivity extends AppCompatActivity {
                 //Et si la plante est déplaçable, correspondant à la troisième séparation
                 boolean isMovable = Boolean.valueOf(plantAttributs[2]);
 
-                //Création d'une nouvelle plante, en créant une variable de type "Plant"
-                //Plant plant = new Plant(getApplicationContext(), plantName, degree, isMovable);
-
                 //On récupère l'id de la vue principale
                 LinearLayout contentMain = findViewById(R.id.mainLinearLayout);
 
@@ -358,69 +297,37 @@ public class MainActivity extends AppCompatActivity {
 
 
                 //Création d'une nouvelle vue de type "PlantView"
-
+                plantView.setName(plantName);
+                plantView.setDegree(degree);
                 if (isNetworkAvailable()) {
                     if (temp == 100000) {
-                        plantView.setName(plantName);
-                        plantView.setDegree(degree);
                         plantView.setInfo("Vous n'avez pas encore indiqué de localisation");
-                        contentMain.invalidate();
-                        refreshView(contentMain);
-
-                    } else if (temp == -1000000) {
-                        plantView.setName(plantName);
-                        plantView.setDegree(degree);
+                    }else if (temp == -1000000) {
                         plantView.setInfo("Problème lié au chargement de la météo");
-                        contentMain.invalidate();
-                        refreshView(contentMain);
-
-                    } else if (temp == 0.0) {
-                        /*finish();
-                        startActivity(this.getIntent());*/
-                        plantView.setName(plantName);
-                        plantView.setDegree(degree);
+                    }else if (temp == 0.0) {
                         plantView.setInfo("Problème lié au chargement de la météo");
-                        contentMain.invalidate();
-                        refreshView(contentMain);
-
-                    } else if (temp < Double.parseDouble(degree)+2) {
-                        if (isMovable) {
-                            plantView.setName(plantName);
-                            plantView.setDegree(degree);
+                    }else if (temp < Double.parseDouble(degree)+2) {
+                        if(isMovable) {
                             plantView.setInfo("Pensez à rentrer votre plante");
                             plantView.changeBackgroundColor("#ff7961");
                             plantView.changeTextColor("#131313");
-                            contentMain.invalidate();
-                            refreshView(contentMain);}
-                        else {
-                            plantView.setName(plantName);
-                            plantView.setDegree(degree);
+                        }
+                        else{
                             plantView.setInfo("Pensez à couvrir votre plante");
                             plantView.changeBackgroundColor("#ff7961");
                             plantView.changeTextColor("#131313");
-                            contentMain.invalidate();
-                            refreshView(contentMain);}
-
-                    } else if (temp > Double.parseDouble(degree)+2) {
-                        plantView.setName(plantName);
-                        plantView.setDegree(degree);
+                        }
+                    }else if(temp > Double.parseDouble(degree)+2) {
                         plantView.setInfo("Pas de problème pour cette plante");
-                        contentMain.invalidate();
-                        refreshView(contentMain);
+
 
                     } else {
-                        plantView.setName(plantName);
-                        plantView.setDegree(degree);
                         plantView.setInfo("Problème lié au chargement de la météo");
-                        contentMain.invalidate();
-                        refreshView(contentMain);
+
                     }
                 } else if (!isNetworkAvailable()) {
-                    plantView.setName(plantName);
-                    plantView.setDegree(degree);
                     plantView.setInfo("Pas d'accès internet");
                 }
-
 
                 Log.v("Plantes:", plantName + ": " + degree + "°C " + "Déplaçable : " + isMovable);
 
@@ -433,8 +340,6 @@ public class MainActivity extends AppCompatActivity {
 
 
         }else{
-            //showToast("Vous n'avez pas encore de plantes enregistrées");
-
             plantsView = findViewById(R.id.mainLinearLayout);
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
                     LinearLayout.LayoutParams.WRAP_CONTENT,
@@ -723,23 +628,9 @@ public class MainActivity extends AppCompatActivity {
         return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 
-    public void refreshView(ViewGroup view){
-        view.setVisibility(View.GONE);
-        view.setVisibility(View.VISIBLE);
-    }
-
     public void showNextDayTemp(double temp){
         mainLinearLayout = findViewById(R.id.mainLinearLayout);
         if(tempText == null) {
-            LayoutTransition transition = new LayoutTransition();
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-                transition.enableTransitionType(LayoutTransition.CHANGING);
-            }
-            transition.setDuration(300);
-            mainLinearLayout.setLayoutTransition(transition);
-
-
-
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
             params.setMargins(10, 10, 10, 10);
             params.gravity = Gravity.CENTER;

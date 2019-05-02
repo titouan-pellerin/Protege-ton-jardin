@@ -1,4 +1,4 @@
-package fr.visufo.titouan.jardin;
+package fr.visufo.titouan.jardin.PlantManagement;
 
 import android.animation.LayoutTransition;
 import android.annotation.SuppressLint;
@@ -25,6 +25,8 @@ import android.widget.Toast;
 import java.io.File;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import fr.visufo.titouan.jardin.R;
+import fr.visufo.titouan.jardin.Utils.FontsUtils;
 
 import static android.view.Gravity.CENTER;
 

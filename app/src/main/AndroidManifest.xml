@@ -21,7 +21,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ShortcutActivity"></activity>
+        <activity android:name=".Utils.ShortcutActivity"></activity>
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
              (See the file "res/values/google_maps_api.xml").
@@ -38,7 +38,7 @@
             android:resource="@xml/shortcuts" />
 
         <activity
-            android:name=".MapsActivity"
+            android:name=".Weather.MapsActivity"
             android:label="@string/title_activity_maps" />
         <activity
             android:name=".MainActivity"

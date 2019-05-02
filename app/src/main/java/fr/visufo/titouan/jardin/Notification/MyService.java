@@ -1,4 +1,4 @@
-package fr.visufo.titouan.jardin;
+package fr.visufo.titouan.jardin.Notification;
 
 import android.app.AlarmManager;
 import android.app.PendingIntent;
@@ -41,7 +41,7 @@ public class MyService extends Service {
         calendar.set(Calendar.HOUR_OF_DAY,11);
         calendar.set(Calendar.MINUTE,51);
 
-        myIntent = new Intent(this,AlarmNotificationReceiver.class);
+        myIntent = new Intent(this, AlarmNotificationReceiver.class);
         pendingIntent = PendingIntent.getBroadcast(this,0,myIntent,0);
 
         if(!isRepeat)

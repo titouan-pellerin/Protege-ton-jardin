@@ -1,4 +1,4 @@
-package fr.visufo.titouan.jardin;
+package fr.visufo.titouan.jardin.Notification;
 
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -8,6 +8,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
+
+import fr.visufo.titouan.jardin.MainActivity;
+import fr.visufo.titouan.jardin.R;
 
 import static android.app.PendingIntent.FLAG_ONE_SHOT;
 

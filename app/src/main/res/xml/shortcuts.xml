@@ -9,7 +9,7 @@
     <intent
         android:action="android.intent.action.VIEW"
         android:targetPackage="fr.visufo.titouan.jardin"
-        android:targetClass="fr.visufo.titouan.jardin.ShortcutActivity" />
+        android:targetClass="fr.visufo.titouan.jardin.Utils.ShortcutActivity" />
     </shortcut>
     <shortcut
         android:shortcutId="localisation"
@@ -24,6 +24,6 @@
         <intent
             android:action="android.intent.action.VIEW"
             android:targetPackage="fr.visufo.titouan.jardin"
-            android:targetClass="fr.visufo.titouan.jardin.MapsActivity" />
+            android:targetClass="fr.visufo.titouan.jardin.Weather.MapsActivity" />
     </shortcut>
 </shortcuts>

@@ -1,4 +1,4 @@
-package fr.visufo.titouan.jardin;
+package fr.visufo.titouan.jardin.Weather;
 
 import android.Manifest;
 import android.app.AlertDialog;
@@ -41,6 +41,9 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.util.List;
 
+import fr.visufo.titouan.jardin.MainActivity;
+import fr.visufo.titouan.jardin.R;
+
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
@@ -65,7 +68,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     @Override
     public void onBackPressed() {
-        Intent intent = new Intent(getApplicationContext(),MainActivity.class);
+        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
         startActivity(intent);
         finish();
     }

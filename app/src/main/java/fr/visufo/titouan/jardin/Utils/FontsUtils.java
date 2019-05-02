@@ -1,20 +1,20 @@
-package fr.visufo.titouan.jardin;
+package fr.visufo.titouan.jardin.Utils;
 
 import android.content.Context;
 import android.graphics.Typeface;
 
 public class FontsUtils {
 
-    static Typeface getRalewayLight(Context context){
+    public static Typeface getRalewayLight(Context context){
         return Typeface.createFromAsset(context.getAssets(), "raleway_light.ttf");
     }
-    static Typeface getRalewayRegular(Context context){
+    public static Typeface getRalewayRegular(Context context){
         return Typeface.createFromAsset(context.getAssets(), "raleway_regular.ttf");
     }
-    static Typeface getRalewaySemiBold(Context context){
+    public static Typeface getRalewaySemiBold(Context context){
         return Typeface.createFromAsset(context.getAssets(), "raleway_semibold.ttf");
     }
-    static Typeface getRobotoMedium(Context context){
+    public static Typeface getRobotoMedium(Context context){
         return Typeface.createFromAsset(context.getAssets(), "roboto_medium.ttf");
     }
 }

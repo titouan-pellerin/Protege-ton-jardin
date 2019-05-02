@@ -1,4 +1,4 @@
-package fr.visufo.titouan.jardin;
+package fr.visufo.titouan.jardin.Weather;
 
 import android.content.Context;
 import android.util.Log;
@@ -14,12 +14,12 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-class WeatherClass {
+public class WeatherClass {
 
     private static double temp = 0.0;
 
 
-    static void getTemp(double latitude, double longitude, final IResult callback, Context context){
+   public static void getTemp(double latitude, double longitude, final IResult callback, Context context){
         Toast.makeText(context,"Chargement des plantes", Toast.LENGTH_SHORT).show();
         String OPEN_WEATHER_MAP_API = "97e202a04a512514be6c36668fb2a5e3";
         new WeatherManager(OPEN_WEATHER_MAP_API)

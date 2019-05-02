@@ -1,4 +1,4 @@
-package fr.visufo.titouan.jardin;
+package fr.visufo.titouan.jardin.PlantManagement;
 
 import android.content.Context;
 import android.util.Log;

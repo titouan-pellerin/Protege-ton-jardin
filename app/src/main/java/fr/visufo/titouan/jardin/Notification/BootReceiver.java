@@ -1,4 +1,4 @@
-package fr.visufo.titouan.jardin;
+package fr.visufo.titouan.jardin.Notification;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -14,7 +14,7 @@ public class BootReceiver extends BroadcastReceiver
 
         // Your code to execute when Boot Completd
 
-        Intent i = new Intent(context,MyService.class);
+        Intent i = new Intent(context, MyService.class);
         context.startService(i);
 
         Toast.makeText(context, "Booting Completed", Toast.LENGTH_LONG).show();
