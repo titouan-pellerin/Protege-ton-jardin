@@ -1,131 +1,141 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:gravity="center">
 
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:orientation="vertical"
-        android:background="@drawable/addplant_dialog_shape">
+        android:background="@drawable/addplant_dialog_shape"
+        android:orientation="vertical">
 
 
+        <fr.visufo.titouan.jardin.PlantManagement.UnderlinedTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="20dp"
+            android:text="@string/add_plant_dialog_text"
+            android:textColor="#444444"
+            android:textSize="28sp"
+            app:fontFamily="@font/raleway_semibold"
+            app:underlineColor="#6DB85C"
+            app:underlineWidth="10px" />
 
-            <fr.visufo.titouan.jardin.PlantManagement.UnderlinedTextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:layout_gravity="center"
-                app:fontFamily="@font/raleway_semibold"
-                android:text="Ajout d'une plante"
-                android:textColor="#444444"
-                android:textSize="28sp"
-                app:underlineColor="#6DB85C"
-                app:underlineWidth="10px" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="90dp"
+            android:layout_marginTop="30dp"
+            android:layout_marginEnd="20dp"
+            android:layout_marginRight="20dp"
+            android:gravity="center">
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="90dp"
-                android:layout_marginTop="30dp"
-                android:layout_marginEnd="20dp"
-                android:layout_marginRight="20dp"
-                android:gravity="center">
-
-                <Button
-                    android:id="@+id/addImage"
-                    android:layout_width="80dp"
-                    android:layout_height="80dp"
-                    android:layout_marginHorizontal="15dp"
-                    android:background="@drawable/add_pic_ripple"
-                    android:gravity="center_horizontal|center_vertical"
-                    android:text="Ajouter   une photo"
-                    android:textColor="#000000"
-                    android:textAllCaps="false"
-                    android:textSize="15sp"
-                    app:fontFamily="@font/raleway_medium"/>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:orientation="vertical">
-
-                        <android.support.design.widget.TextInputLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content">
-
-                            <EditText
-                                android:id="@+id/plant_name"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:hint="Nom de la plante"
-                                android:inputType="textPersonName"
-                                app:fontFamily="@font/raleway_semibold"/>
-
-                        </android.support.design.widget.TextInputLayout>
-                    </LinearLayout>
-            </LinearLayout>
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="30dp"
-                android:layout_marginTop="15dp"
-                android:orientation="horizontal"
-                android:weightSum="1">
-                <Switch
-                    android:id="@+id/moveable_plant"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="Plante déplaçable:"
-                    android:textSize="16sp"
-                    android:fontFamily="@font/raleway_semibold"/>
-            </LinearLayout>
+            <Button
+                android:id="@+id/addImage"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:layout_marginHorizontal="15dp"
+                android:layout_marginRight="15dp"
+                android:layout_marginLeft="15dp"
+                android:background="@drawable/add_pic_button"
+                android:gravity="center_horizontal|center_vertical"
+                android:text="@string/add_pic_text"
+                android:textAllCaps="false"
+                android:textColor="#000000"
+                android:textSize="15sp"
+                app:fontFamily="@font/raleway_medium" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginHorizontal="30dp"
-                android:layout_marginTop="5dp"
-                android:orientation="horizontal"
-                android:gravity="center"
-                android:weightSum="10">
+                android:orientation="vertical">
 
-                <EditText
-                    android:id="@+id/degree_nbr"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:hint="Degré de gel"
-                    app:fontFamily="@font/raleway_semibold"
-                    android:inputType="numberSigned"/>
-                <TextView
-                    android:id="@+id/value_unit_symbol"
-                    android:layout_width="wrap_content"
-                    android:layout_height="25dp"
-                    android:text="°C"
-                    android:textSize="20sp"
-                    app:fontFamily="@font/raleway_semibold"/>
+                <android.support.design.widget.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <EditText
+                        android:id="@+id/plant_name"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Nom de la plante"
+                        android:inputType="textPersonName"
+                        app:fontFamily="@font/raleway_semibold" />
+
+                </android.support.design.widget.TextInputLayout>
             </LinearLayout>
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:layout_marginTop="5dp"
-                android:gravity="center">
-
-                <Button
-                    android:id="@+id/done_button_addPlant"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:layout_gravity="center"
-                    android:layout_marginTop="-5dp"
-                    android:layout_marginHorizontal="10dp"
-                    android:background="@drawable/ic_done_ripple"/>
-            </LinearLayout>
-
         </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="30dp"
+            android:layout_marginLeft="30dp"
+            android:layout_marginRight="30dp"
+            android:layout_marginTop="15dp"
+            android:orientation="horizontal"
+            android:weightSum="1">
+
+            <Switch
+                android:id="@+id/moveable_plant"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                app:fontFamily="@font/raleway_semibold"
+                android:text="Plante déplaçable:"
+                android:textSize="16sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginHorizontal="30dp"
+            android:layout_marginRight="30dp"
+            android:layout_marginLeft="30dp"
+            android:layout_marginTop="5dp"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:weightSum="10">
+
+            <EditText
+                android:id="@+id/degree_nbr"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:hint="@string/degree_dialog_text"
+                android:inputType="numberSigned"
+                app:fontFamily="@font/raleway_semibold" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="25dp"
+                android:text="@string/celscius"
+                android:textSize="20sp"
+                app:fontFamily="@font/raleway_semibold" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginTop="5dp"
+            android:gravity="center">
+
+            <Button
+                android:id="@+id/done_button_addPlant"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_gravity="center"
+                android:layout_marginHorizontal="10dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="-5dp"
+                android:background="@drawable/ic_done" />
+        </LinearLayout>
+
+    </LinearLayout>
 
 
 </LinearLayout>

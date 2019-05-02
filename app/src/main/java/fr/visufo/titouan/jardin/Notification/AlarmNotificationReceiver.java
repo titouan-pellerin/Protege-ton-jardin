@@ -25,7 +25,7 @@ public class AlarmNotificationReceiver extends BroadcastReceiver {
                 context,
                 0,
                 myIntent,
-                FLAG_ONE_SHOT );
+                FLAG_ONE_SHOT);
 
         builder.setAutoCancel(true)
                 .setDefaults(Notification.DEFAULT_ALL)
@@ -37,8 +37,8 @@ public class AlarmNotificationReceiver extends BroadcastReceiver {
                 .setDefaults(Notification.DEFAULT_LIGHTS | Notification.DEFAULT_SOUND)
                 .setContentInfo("test");
 
-        NotificationManager notificationManager = (NotificationManager)context.getSystemService(Context.NOTIFICATION_SERVICE);
-        notificationManager.notify(1,builder.build());
+        NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+        notificationManager.notify(1, builder.build());
         Log.v("TEST", "NOTIFFFFF");
     }
 }

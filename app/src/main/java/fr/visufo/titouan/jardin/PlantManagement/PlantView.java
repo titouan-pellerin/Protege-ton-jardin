@@ -20,7 +20,6 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.io.File;
 
@@ -96,8 +95,8 @@ public class PlantView extends FrameLayout {
 
 
     /**********
-    * FONCTIONS
-    ***********/
+     * FONCTIONS
+     ***********/
 
     //Fonction utile pour récupérer les attributs si l'on ajoute une "PlantView" directement en XML
     private void obtainStyledAttributes(Context context, AttributeSet attrs, int defStyleAttr) {
@@ -111,6 +110,7 @@ public class PlantView extends FrameLayout {
 
         }
     }
+
     //Fonction permettant d'initialiser la vue
     private void init() {
         inflate(getContext(), R.layout.plantview, this);
@@ -122,6 +122,7 @@ public class PlantView extends FrameLayout {
         textsView = findViewById(R.id.textes);
         setupView();
     }
+
     //Fonction permettant d'"installer" la vue
     private void setupView() {
 
@@ -132,12 +133,9 @@ public class PlantView extends FrameLayout {
         params.height = 110;
         params.width = ViewGroup.LayoutParams.WRAP_CONTENT;
         params.bottomMargin = 15;
-        params.gravity = Gravity.START|CENTER;
-
+        params.gravity = Gravity.START | CENTER;
 
         btnContainer.setLayoutParams(params);
-
-
 
         removeButton = new Button(getContext());
         removeButton.setText("Supprimer");
@@ -147,29 +145,24 @@ public class PlantView extends FrameLayout {
         removeButton.setAllCaps(false);
         removeButton.setTypeface(FontsUtils.getRalewayRegular(getContext()));
 
-
-
         nameView.setText(nameText);
         infoView.setText(infoText);
-        degreeView.setText(degreeText +" °C");
+        degreeView.setText(degreeText + " °C");
         imageView.setImageDrawable(plantImage);
-
-
-
 
         planteBg.setOnClickListener(new OnClickListener() {
             @SuppressLint("NewApi")
             @Override
             public void onClick(View v) {
 
-                if(isExtended){
+                if (isExtended) {
 
                     textsView.removeView(btnContainer);
                     btnContainer.removeView(removeButton);
                     isExtended = false;
 
 
-                }else if(!isExtended) {
+                } else if (!isExtended) {
                     textsView.addView(btnContainer);
                     btnContainer.addView(removeButton);
                     isExtended = true;
@@ -179,7 +172,7 @@ public class PlantView extends FrameLayout {
         removeButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                File file = new File(getContext().getFilesDir(),nameView.getText()+".txt");
+                File file = new File(getContext().getFilesDir(), nameView.getText() + ".txt");
                 file.delete();
                 LinearLayout parent = (LinearLayout) getParent();
                 parent.removeView(PlantView.this);
@@ -205,38 +198,34 @@ public class PlantView extends FrameLayout {
         invalidate();
         requestLayout();
     }
-    public void setInfo(String info){
+
+    public void setInfo(String info) {
         infoView.setText(info);
         invalidate();
         requestLayout();
     }
-    public void setDegree(String degree){
-        degreeView.setText(degree+" °C");
+
+    public void setDegree(String degree) {
+        degreeView.setText(degree + " °C");
     }
-    public void setImage(Bitmap image){
+
+    public void setImage(Bitmap image) {
         imageView.setImageBitmap(image);
         invalidate();
         requestLayout();
     }
 
-    public void changeBackgroundColor(String color){
+    public void changeBackgroundColor(String color) {
         planteBg.getBackground().setColorFilter(Color.parseColor(color), PorterDuff.Mode.SRC_OVER);
         Log.v("Plant View", "Changing background color");
         invalidate();
         requestLayout();
     }
 
-    public void changeTextColor(String color){
+    public void changeTextColor(String color) {
         infoView.setTextColor(Color.parseColor(color));
         Log.v("Plant View", "Changing text color");
         invalidate();
         requestLayout();
     }
-
-
-    public void showToast(String str){
-        Toast.makeText(getContext(), str, Toast.LENGTH_SHORT).show();
-    }
-
-
 }

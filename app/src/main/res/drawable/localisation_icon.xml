@@ -1,40 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-        <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
-
-            <item android:gravity="center">
-                <shape
-                    android:shape="rectangle">
-
-                    <corners
-                        android:radius="400dp" />
-                    <!--<gradient
-                        android:angle="45"
-                        android:centerX="float"
-                        android:centerY="float"
-                        android:endColor="#01f1fa"
-                        android:gradientRadius="integer"
-                        android:startColor="#0189ff"
-                        android:type="linear" />!-->
-
-                    <!--If your shape requires only one solid color-->
-                    <solid
-                        android:color="#F5F5F5" />-->
-
-                    <size
-                        android:width="48dp"
-                        android:height="48dp" />
-                    <!--Use android:dashWidth="2dp" and android:dashGap="2dp"
-                    to add dashes to your stroke-->
-
-                    <!--If you want to add padding-->
-
-
-                </shape>
-            </item>
-            <item android:drawable="@drawable/ic_settings_green"
-                android:height="24dp"
-                android:width="24dp"
-                android:gravity="center"/>
-
-
-        </layer-list>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:gravity="center">
+        <shape android:shape="rectangle">
+            <corners android:radius="400dp" />
+            <solid android:color="#F5F5F5" />
+            <size
+                android:width="48dp"
+                android:height="48dp" />
+       </shape>
+    </item>
+    <item
+        android:width="24dp"
+        android:height="24dp"
+        android:drawable="@drawable/ic_settings_green"
+        android:gravity="center" />
+</layer-list>

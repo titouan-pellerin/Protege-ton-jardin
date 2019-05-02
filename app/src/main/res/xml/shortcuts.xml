@@ -1,29 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <shortcuts xmlns:android="http://schemas.android.com/apk/res/android">
     <shortcut
-    android:shortcutId="add_plant"
-    android:enabled="true"
-    android:icon="@drawable/add_plant_icon"
-    android:shortcutShortLabel="@string/shortcut_short_label"
-    android:shortcutLongLabel="@string/shortcut_long_label">
-    <intent
-        android:action="android.intent.action.VIEW"
-        android:targetPackage="fr.visufo.titouan.jardin"
-        android:targetClass="fr.visufo.titouan.jardin.Utils.ShortcutActivity" />
+        android:enabled="true"
+        android:icon="@drawable/add_plant_icon"
+        android:shortcutId="add_plant"
+        android:shortcutLongLabel="@string/shortcut_long_label"
+        android:shortcutShortLabel="@string/shortcut_short_label">
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:targetClass="fr.visufo.titouan.jardin.Utils.ShortcutActivity"
+            android:targetPackage="fr.visufo.titouan.jardin" />
     </shortcut>
     <shortcut
-        android:shortcutId="localisation"
         android:enabled="true"
         android:icon="@drawable/localisation_icon"
-        android:shortcutShortLabel="@string/shortcut_short_localisation"
-        android:shortcutLongLabel="@string/shortcut_long_localisation">
+        android:shortcutId="localisation"
+        android:shortcutLongLabel="@string/shortcut_long_localisation"
+        android:shortcutShortLabel="@string/shortcut_short_localisation">
         <intent
             android:action="android.intent.action.VIEW"
-            android:targetPackage="fr.visufo.titouan.jardin"
-            android:targetClass="fr.visufo.titouan.jardin.MainActivity" />
+            android:targetClass="fr.visufo.titouan.jardin.MainActivity"
+            android:targetPackage="fr.visufo.titouan.jardin" />
         <intent
             android:action="android.intent.action.VIEW"
-            android:targetPackage="fr.visufo.titouan.jardin"
-            android:targetClass="fr.visufo.titouan.jardin.Weather.MapsActivity" />
+            android:targetClass="fr.visufo.titouan.jardin.Weather.MapsActivity"
+            android:targetPackage="fr.visufo.titouan.jardin" />
     </shortcut>
 </shortcuts>

@@ -56,32 +56,26 @@ import fr.visufo.titouan.jardin.Weather.WeatherClass;
 
 public class MainActivity extends AppCompatActivity {
 
+    static final int RESULT_LOAD_IMG = 1;
+    private static final int ERROR_DIALOG_REQUEST = 9001;
+    static double temp = 0.0;
     //Views
     SpeedDialView mSpeedDialView;
-
     //AddPlantDialog
     EditText plantEdit;
     EditText degreeEdit;
     Button addImageButton;
     Button addPlantDoneButton;
     Switch aSwitch;
-
-
     LinearLayout plantsView;
     Button firstPlantButton;
     TextView tempText;
     LinearLayout mainLinearLayout;
     ScrollView scrollView;
-
     //Variables
     Bitmap selectedImage;
     String plantName;
     String degree;
-
-    static final int RESULT_LOAD_IMG = 1;
-    private static final int ERROR_DIALOG_REQUEST = 9001;
-
-    static double temp = 0.0;
 
     //Actions au lancement de l'application
     @Override
@@ -93,33 +87,25 @@ public class MainActivity extends AppCompatActivity {
         addFab();
         //Charge les plantes enregistrées au démarrage de l'application
 
-        String data = readFromFile(getApplicationContext(),"Localisation.latLng");
-        if(!(data.isEmpty())){
-
+        String data = readFromFile(getApplicationContext(), "Localisation.latLng");
+        if (!(data.isEmpty())) {
             String[] latLgn;
             latLgn = data.split(";");
-            if(!(data.isEmpty())) {
                 Log.v("Latitude", latLgn[0]);
                 Log.v("Longitude", latLgn[1]);
                 double latitude = Double.parseDouble(latLgn[0]);
                 double longitude = Double.parseDouble(latLgn[1]);
 
-                WeatherClass.getTemp(latitude,longitude, new IResult() {
+                WeatherClass.getTemp(latitude, longitude, new IResult() {
                     @Override
                     public void onResult(double temp) {
                         MainActivity.temp = temp;
                         loadPlants(temp);
                         showNextDayTemp(temp);
-                        Log.v("Load", temp +"");
-
-
-
+                        Log.v("Load", temp + "");
                     }
-                },getApplicationContext());
-            }else{
-                temp = 100000;
-            }
-        }else{
+                }, getApplicationContext());
+        }else {
             MainActivity.temp = 100000;
             loadPlants(100000);
             showNextDayTemp(100000);
@@ -127,7 +113,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         String caller = getIntent().getStringExtra("caller");
-        if(caller != null) {
+        if (caller != null) {
             showAddPlantDialog();
         }
 
@@ -138,7 +124,6 @@ public class MainActivity extends AppCompatActivity {
         }
         transition.setDuration(300);
         mainLinearLayout.setLayoutTransition(transition);
-
 
 
     }
@@ -185,7 +170,7 @@ public class MainActivity extends AppCompatActivity {
                     case R.id.fab_settings:
                         //On créé une fenêtre de dialogue de type "Settings"
 
-                        if(isServicesOK()) {
+                        if (isServicesOK()) {
                             finish();
                             Intent intent = new Intent(MainActivity.this, MapsActivity.class);
                             startActivity(intent);
@@ -206,7 +191,7 @@ public class MainActivity extends AppCompatActivity {
     //Fonction ajoutant une plante à la vue d'utilisateur en fonction des différents paramètres
     public void addPlantView(Context context, String name, String degree, boolean isMovable) {
 
-        if(firstPlantButton != null) {
+        if (firstPlantButton != null) {
             plantsView.removeView(firstPlantButton);
         }
         //On enregistre l'image sélectionnée plus tôt sur le stockage interne du téléphone au nom de la plante à l'aide d'une fonction
@@ -226,32 +211,31 @@ public class MainActivity extends AppCompatActivity {
         PlantView plantView = new PlantView(context, null);
         plantView.setName(plantName);
         plantView.setDegree(degree);
-        if(isNetworkAvailable()) {
-            if(temp == 100000){
+        if (isNetworkAvailable()) {
+            if (temp == 100000) {
                 plantView.setInfo("Vous n'avez pas encore indiqué de localisation");
-            }else if(temp == -1000000){
+            } else if (temp == -1000000) {
                 plantView.setInfo("Problème lié au chargement de la météo");
-            }else if (temp <= Double.parseDouble(degree)+2) {
+            } else if (temp <= Double.parseDouble(degree) + 2) {
                 if (isMovable) {
                     plantView.setInfo("Pensez à rentrer votre plante");
                     plantView.changeBackgroundColor("#ff7961");
                     plantView.changeTextColor("#131313");
-                }
-                else {
+                } else {
                     plantView.setInfo("Pensez à couvrir votre plante");
                     plantView.changeBackgroundColor("#ff7961");
                     plantView.changeTextColor("#131313");
                 }
 
-            }else if (temp > Double.parseDouble(degree)+2) {
+            } else if (temp > Double.parseDouble(degree) + 2) {
                 plantView.setInfo("Pas de problème pour cette plante");
 
 
-            }else {
+            } else {
                 plantView.setInfo("Problème lié au chargement de la météo");
 
             }
-        }else if(!isNetworkAvailable()){
+        } else if (!isNetworkAvailable()) {
             plantView.setInfo("Pas d'accès internet");
         }
         //On récupère l'image au nom de la plante depuis le stockage interne et on l'ajoute à la "PlantView" définie juste au-dessus
@@ -302,22 +286,21 @@ public class MainActivity extends AppCompatActivity {
                 if (isNetworkAvailable()) {
                     if (temp == 100000) {
                         plantView.setInfo("Vous n'avez pas encore indiqué de localisation");
-                    }else if (temp == -1000000) {
+                    } else if (temp == -1000000) {
                         plantView.setInfo("Problème lié au chargement de la météo");
-                    }else if (temp == 0.0) {
+                    } else if (temp == 0.0) {
                         plantView.setInfo("Problème lié au chargement de la météo");
-                    }else if (temp < Double.parseDouble(degree)+2) {
-                        if(isMovable) {
+                    } else if (temp < Double.parseDouble(degree) + 2) {
+                        if (isMovable) {
                             plantView.setInfo("Pensez à rentrer votre plante");
                             plantView.changeBackgroundColor("#ff7961");
                             plantView.changeTextColor("#131313");
-                        }
-                        else{
+                        } else {
                             plantView.setInfo("Pensez à couvrir votre plante");
                             plantView.changeBackgroundColor("#ff7961");
                             plantView.changeTextColor("#131313");
                         }
-                    }else if(temp > Double.parseDouble(degree)+2) {
+                    } else if (temp > Double.parseDouble(degree) + 2) {
                         plantView.setInfo("Pas de problème pour cette plante");
 
 
@@ -339,7 +322,7 @@ public class MainActivity extends AppCompatActivity {
             }
 
 
-        }else{
+        } else {
             plantsView = findViewById(R.id.mainLinearLayout);
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
                     LinearLayout.LayoutParams.WRAP_CONTENT,
@@ -361,13 +344,12 @@ public class MainActivity extends AppCompatActivity {
             plantsView.addView(firstPlantButton);
 
 
-
         }
         showNextDayTemp(temp);
 
     }
 
-    public void showAddPlantDialog(){
+    public void showAddPlantDialog() {
         final AddPlantDialogClass addPlantDialog = new AddPlantDialogClass(MainActivity.this);
         addPlantDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
@@ -423,50 +405,45 @@ public class MainActivity extends AppCompatActivity {
                 //Sécurités vérifiant si les champs sont bien remplis
 
                 //Si les variables plantName et degree sont vides, donc si les deux champs ne sont pas remplis, on en informe l'utilisateur
-                if(plantName.isEmpty() && degree.isEmpty()) {
+                if (plantName.isEmpty() && degree.isEmpty()) {
                     showToast("Les champs ne sont pas remplis");
                     //Sinon si seulement la variable degree est vide, donc si le 2e champs n'est pas rempli, on en informe l'utilisateur
-                }else if (degree.isEmpty()) {
+                } else if (degree.isEmpty()) {
                     showToast("Indiquer un degré de gel");
                     //Sinon si seulement la variable plantName est vide, donc si le 1er champs n'est pas rempli, on en informe l'utilisateur
-                }else if (plantName.isEmpty()) {
+                } else if (plantName.isEmpty()) {
                     showToast("Indiquer un nom de plante");
                     //Sinon si il n'y a pas d'image de sélectionnée, on en informe l'utilisateur
-                }else if(selectedImage==null){
+                } else if (selectedImage == null) {
                     int alea = Randomizer.generate(1, 20);
-                    int id = getApplicationContext().getResources().getIdentifier("plant_img_type"+alea, "drawable", getApplicationContext().getPackageName());
+                    int id = getApplicationContext().getResources().getIdentifier("plant_img_type" + alea, "drawable", getApplicationContext().getPackageName());
                     selectedImage = BitmapFactory.decodeResource(getApplicationContext().getResources(), id);
-
-
-
-
-                    if(switchState) {
-                        addPlantView(getApplicationContext(), plantName, degree,true);
+                    if (switchState) {
+                        addPlantView(getApplicationContext(), plantName, degree, true);
                         //On ferme la fenêtre de dialogue
                         addPlantDialog.dismiss();
                         //Sinon, donc si elle ne l'est pas
-                    }else{
-                        addPlantView(getApplicationContext(), plantName, degree,false);
+                    } else {
+                        addPlantView(getApplicationContext(), plantName, degree, false);
                         addPlantDialog.dismiss();
                     }
 
                     //Et finalement si toutes les conditions sont remplies, on ajoute les plantes à la vue principale.
-                }else{
+                } else {
                     //Si la plante est déplaçable:
-                    if(switchState) {
-                        addPlantView(getApplicationContext(), plantName, degree,true);
+                    if (switchState) {
+                        addPlantView(getApplicationContext(), plantName, degree, true);
                         //On ferme la fenêtre de dialogue
                         addPlantDialog.dismiss();
                         //Sinon, donc si elle ne l'est pas
-                    }else{
-                        addPlantView(getApplicationContext(), plantName, degree,false);
+                    } else {
+                        addPlantView(getApplicationContext(), plantName, degree, false);
                         addPlantDialog.dismiss();
                     }
                 }
 
             }
         });
-
 
 
     }
@@ -539,7 +516,7 @@ public class MainActivity extends AppCompatActivity {
         try {
             fos = new FileOutputStream(mypath);
             //On recadre l'image à l'aide d'une fonction, avant de l'enregistrer pour pas prendre trop de place sur le téléphone et pour réduire le temps de chargement
-            bitmapImage = getResizedBitmap(bitmapImage,200);
+            bitmapImage = getResizedBitmap(bitmapImage, 200);
             bitmapImage.compress(Bitmap.CompressFormat.JPEG, 100, fos);
             Toast.makeText(getApplicationContext(), "Fichier enregistré " + plantName, Toast.LENGTH_SHORT).show();
 
@@ -575,10 +552,10 @@ public class MainActivity extends AppCompatActivity {
         float aspectRatio = bitmap.getWidth() /
                 (float) bitmap.getHeight();
         int height = Math.round(width / aspectRatio);
-        return Bitmap.createScaledBitmap(bitmap,width, height, false);
+        return Bitmap.createScaledBitmap(bitmap, width, height, false);
     }
 
-    public File[] listTxt(){
+    public File[] listTxt() {
 
         File[] files;
         //On récupère le chemin pour accéder aux fichiers de l'application
@@ -597,30 +574,30 @@ public class MainActivity extends AppCompatActivity {
         return files;
     }
 
-    public void showToast(String msg){
-        Toast.makeText(getApplicationContext(),msg,Toast.LENGTH_SHORT).show();
+    public void showToast(String msg) {
+        Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_SHORT).show();
     }
 
-    public boolean isServicesOK(){
+    public boolean isServicesOK() {
         Log.d("Maps", "isServicesOK: checking google services version");
 
         int available = GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(MainActivity.this);
 
-        if(available == ConnectionResult.SUCCESS){
+        if (available == ConnectionResult.SUCCESS) {
             //everything is fine and the user can make map requests
             Log.d("Maps", "isServicesOK: Google Play Services is working");
             return true;
-        }
-        else if(GoogleApiAvailability.getInstance().isUserResolvableError(available)){
+        } else if (GoogleApiAvailability.getInstance().isUserResolvableError(available)) {
             //an error occured but we can resolve it
             Log.d("Maps", "isServicesOK: an error occured but we can fix it");
             Dialog dialog = GoogleApiAvailability.getInstance().getErrorDialog(MainActivity.this, available, ERROR_DIALOG_REQUEST);
             dialog.show();
-        }else{
+        } else {
             Toast.makeText(this, "You can't make map requests", Toast.LENGTH_SHORT).show();
         }
         return false;
     }
+
     private boolean isNetworkAvailable() {
         ConnectivityManager connectivityManager
                 = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -628,20 +605,20 @@ public class MainActivity extends AppCompatActivity {
         return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 
-    public void showNextDayTemp(double temp){
+    public void showNextDayTemp(double temp) {
         mainLinearLayout = findViewById(R.id.mainLinearLayout);
-        if(tempText == null) {
+        if (tempText == null) {
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
             params.setMargins(10, 10, 10, 10);
             params.gravity = Gravity.CENTER;
 
             tempText = new TextView(getApplicationContext());
-            if(temp == 100000) {
+            if (temp == 100000) {
                 tempText.setText("Veuillez indiquer une localisation");
-            }else if(temp == -100000){
+            } else if (temp == -100000) {
                 tempText.setText("Problème lors du chargement de la météo");
-            }else{
-                tempText.setText("Température minimale prévue: " + (Math.round(temp*10.0)/10.0) + "°C");
+            } else {
+                tempText.setText("Température minimale prévue: " + (Math.round(temp * 10.0) / 10.0) + "°C");
             }
 
             tempText.setTextSize(9);
@@ -650,7 +627,7 @@ public class MainActivity extends AppCompatActivity {
             tempText.setTextColor(Color.parseColor("#FFFFFF"));
 
             mainLinearLayout.addView(tempText);
-        }else{
+        } else {
             mainLinearLayout.removeView(tempText);
             tempText = null;
             showNextDayTemp(temp);
