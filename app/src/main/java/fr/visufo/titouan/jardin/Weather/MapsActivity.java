@@ -51,9 +51,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     LocationRequest mLocationRequest;
     Location mLastLocation;
     Button button;
-    double temp;
     private GoogleMap mMap;
     private Marker marker;
+
     LocationCallback mLocationCallback = new LocationCallback() {
         @Override
         public void onLocationResult(LocationResult locationResult) {
@@ -63,19 +63,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 Location location = locationList.get(locationList.size() - 1);
                 //Log.i("MapsActivity", "Location: " + location.getLatitude() + " " + location.getLongitude());
                 mLastLocation = location;
-                if (marker != null) {
-                    marker.remove();
-                }
+
 
                 //Place current location marker
                 LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
-                /*MarkerOptions markerOptions = new MarkerOptions();
-                markerOptions.position(latLng);
-                markerOptions.title("");
-                markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE));
-                marker = mMap.addMarker(markerOptions);*/
-
-                //move map camera
                 mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 11));
             }
         }
@@ -122,8 +113,22 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 //Location Permission already granted
                 mFusedLocationClient.requestLocationUpdates(mLocationRequest, mLocationCallback, Looper.myLooper());
                 mMap.setMyLocationEnabled(true);
+                String data = readFromFile(getApplicationContext(), "Localisation.latLng");
+                if (!(data.isEmpty())) {
+                    String[] latLgn;
+                    latLgn = data.split(";");
+                    Log.v("Latitude", latLgn[0]);
+                    Log.v("Longitude", latLgn[1]);
+                    double latitude = Double.parseDouble(latLgn[0]);
+                    double longitude = Double.parseDouble(latLgn[1]);
+                    LatLng coord = new LatLng(latitude,longitude);
+                    marker = mMap.addMarker(new MarkerOptions()
+                            .position(coord)
+                            .title("Localisation")
+                            .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
+                }
+
             } else {
-                //Request Location Permission
                 checkLocationPermission();
             }
         } else {
@@ -136,7 +141,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getApplicationContext(), "Vous devez indiquer un lieu", Toast.LENGTH_SHORT).show();
+                if (marker == null) {
+                    Toast.makeText(getApplicationContext(), "Vous devez indiquer un lieu", Toast.LENGTH_SHORT).show();
+                }else{
+                    finish();
+                    Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                    startActivity(intent);
+                }
             }
         });
         mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
@@ -215,12 +226,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         switch (requestCode) {
             case MY_PERMISSIONS_REQUEST_LOCATION: {
-                // If request is cancelled, the result arrays are empty.
                 if (grantResults.length > 0
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-
-                    // permission was granted, yay! Do the
-                    // location-related task you need to do.
                     if (ContextCompat.checkSelfPermission(this,
                             Manifest.permission.ACCESS_FINE_LOCATION)
                             == PackageManager.PERMISSION_GRANTED) {
@@ -230,16 +237,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     }
 
                 } else {
-
-                    // permission denied, boo! Disable the
-                    // functionality that depends on this permission.
-                    Toast.makeText(this, "permission denied", Toast.LENGTH_LONG).show();
+                    Toast.makeText(this, "Permission refusée", Toast.LENGTH_LONG).show();
                 }
                 return;
             }
-
-            // other 'case' lines to check for other
-            // permissions this app might request
         }
     }
 
@@ -257,15 +258,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             outputStreamWriter.write(latitude + ";" + longitude);
             outputStreamWriter.close();
         } catch (IOException e) {
-            Log.e("Exception", "File write failed: " + e.toString());
+            Log.e("Exception", "Échec: " + e.toString());
         }
     }
-
     private String readFromFile(Context context, String fileName) {
-
         //Défnition d'une variable qui retournera le contenu du fichier
         String ret = "";
-
         //On récupère le contenu du fichier ligne par ligne dans la variable définie plus haut
         try {
             InputStream inputStream = context.openFileInput(fileName);
@@ -290,6 +288,5 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         //On retourne la variable définie au début, donc le contenu du fichier
         return ret;
     }
-
 
 }

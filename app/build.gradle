@@ -36,25 +36,17 @@ dependencies {
 }
 
 dependencies {
-    implementation 'com.leinardi.android:speed-dial:2.0.1'
-    implementation 'de.hdodenhof:circleimageview:2.1.0'
-    implementation 'com.google.android.gms:play-services-location:16.0.0'
     implementation 'com.android.support:recyclerview-v7:28.0.0'
     implementation 'com.android.support:support-v4:28.+'
+}
+
+dependencies {
+    implementation 'com.google.android.gms:play-services-location:16.0.0'
+    implementation 'com.google.android.gms:play-services-maps:+'
+}
+
+dependencies {
     implementation 'com.visuality.f32forandroid:f32:2.4'
-}
-
-dependencies {
-    implementation 'com.google.android.gms:play-services-maps:+'
-    implementation 'com.android.support:appcompat-v7:28.+'
-
-}
-
-dependencies {
-    implementation 'com.google.android.gms:play-services-maps:+'
-    implementation 'com.android.support:appcompat-v7:28.+'
-}
-
-dependencies {
-    implementation 'com.android.support.constraint:constraint-layout:+'
+    implementation 'com.leinardi.android:speed-dial:2.0.1'
+    implementation 'de.hdodenhof:circleimageview:2.1.0'
 }

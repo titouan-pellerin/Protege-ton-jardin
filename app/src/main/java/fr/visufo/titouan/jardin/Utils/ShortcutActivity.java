@@ -18,6 +18,5 @@ public class ShortcutActivity extends AppCompatActivity {
         intent.putExtra("caller", "MainActivity");
         startActivity(intent);
         finish();
-
     }
 }

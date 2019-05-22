@@ -12,7 +12,6 @@
         android:background="@drawable/addplant_dialog_shape"
         android:orientation="vertical">
 
-
         <fr.visufo.titouan.jardin.PlantManagement.UnderlinedTextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -136,6 +135,4 @@
         </LinearLayout>
 
     </LinearLayout>
-
-
 </LinearLayout>

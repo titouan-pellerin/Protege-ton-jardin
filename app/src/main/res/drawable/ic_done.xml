@@ -1,41 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ripple xmlns:android="http://schemas.android.com/apk/res/android"
-    android:color="?attr/colorControlHighlight">
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+
     <item>
-        <layer-list>
+        <shape
+            android:shape="rectangle">
 
-            <item>
-                <shape
-                    android:shape="rectangle">
+            <corners android:radius="400dp" />
+            <solid android:color="#6DB85C" />
 
-                    <corners android:radius="400dp" />
-                    <solid android:color="#6DB85C" />
+            <size
+                android:width="50dp"
+                android:height="50dp" />
+            <padding
+                android:bottom="8dp"
+                android:left="8dp"
+                android:right="8dp"
+                android:top="8dp" />
 
-                    <size
-                        android:width="50dp"
-                        android:height="50dp" />
-                    <padding
-                        android:bottom="8dp"
-                        android:left="8dp"
-                        android:right="8dp"
-                        android:top="8dp" />
-
-                </shape>
-            </item>
-            <item>
-                <vector
-                    android:width="240dp"
-                    android:height="240dp"
-                    android:viewportWidth="24"
-                    android:viewportHeight="24">
-                    <path
-                        android:fillColor="#FFFFFF"
-                        android:pathData="M9,16.2L4.8,12l-1.4,1.4L9,19 21,7l-1.4,-1.4L9,16.2z" />
-                </vector>
-
-            </item>
-
-
-        </layer-list>
+        </shape>
     </item>
-</ripple>
+    <item>
+        <vector
+            android:width="240dp"
+            android:height="240dp"
+            android:viewportWidth="24"
+            android:viewportHeight="24">
+            <path
+                android:fillColor="#FFFFFF"
+                android:pathData="M9,16.2L4.8,12l-1.4,1.4L9,19 21,7l-1.4,-1.4L9,16.2z" />
+        </vector>
+
+    </item>
+
+
+</layer-list>
