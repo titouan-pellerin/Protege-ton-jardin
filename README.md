@@ -1,5 +1,5 @@
 # Protège ton Jardin
-Application informant l'utilsateur si ses plantes risquent de geler selon la météo.
+Application informant l'utilisateur si ses plantes risquent de geler selon les prévisions météorologiques.
 
 Démonstration : https://youtu.be/lueeukDReeg
 
